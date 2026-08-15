@@ -63,9 +63,7 @@ function FindRoot() {
 
                 </div>
     </div>
-                <footer>
-                    No ads · Community verified · 179 stops · 182 routes
-                </footer>
+                
 
         
         </>

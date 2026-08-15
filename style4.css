@@ -57,7 +57,7 @@ body {
 }
 /*header*/
 header {
-    width: 100%;
+    width: 980px;
     height: 50px;
     background-color: #059033;
     color: white;
@@ -65,7 +65,7 @@ header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-
+    margin: 0 auto;
     padding: 0 20px;
 }
 /*logo*/
@@ -76,6 +76,7 @@ header {
 /*login and register*/
 
 .headercontent a {
+    
     color: white;
     text-decoration: none;
     font-size: 18px;
@@ -84,18 +85,19 @@ header {
 /*bussearch and find route*/
 
 .navigation {
-    width: 100%;
+    width: 980px;
     height: 50px;
     background-color: white;
 
     display: flex;
     justify-content: center;
     align-items: center;
-
+    margin: 0 auto;
     gap: 100px;
 }
 
 .navigation a {
+    align-items: center;
     color: #059033;
     font-size: 25px;
     text-decoration: none;
@@ -104,7 +106,7 @@ header {
 .findbox {
     background-color: #f8f9fa;
 
-    width: 500px;
+    width: 900px;
     min-height: 300px;
 
     padding: 50px;
@@ -372,7 +374,7 @@ footer {
 
 }
 
-@media(max-width:600px){
+@media(max-width:900px){
   
 
 /*input for registration and button*/
@@ -724,25 +726,12 @@ color:black;
     margin-bottom: 5px;
 }
 
-/*footer*/
-footer {
-   
 
-    width: 100%;
-    min-height: 20px;
-
-    text-align: center;
-
-    border-top: 1px solid #A4A9B4;
-
-    font-size: 12px;
-       padding: 5px;
-}
 
 
 }
 
-@media(max-width:600px){
+@media(max-width:900px){
   
 
 /*input for registration and button*/

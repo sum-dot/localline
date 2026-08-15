@@ -1,0 +1,249 @@
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: sans-serif;
+}
+body{
+    background: #f3f4f6;    
+}
+.page{
+    min-width: 500px;
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 15px;
+}
+
+.route-header{
+    background: #fff;
+    border-radius: 16px;
+    padding: 20px;
+    margin-bottom: 15px;
+}
+.route-header h1{
+    font-size: 22px;
+}
+.arrow{
+    color: #16a34a;
+    font-weight: bold;
+}
+.badge-light{
+    display: inline-block;
+    margin-top: 10px;
+    background: #dcfce7;
+    color: #16a34a;
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.stats-bar{
+    display: flex;
+    justify-content: space-around;
+    background: #d1fae5;
+    border-radius: 16px;
+    padding: 20px 0;
+    margin-bottom: 15px;
+}
+.stat{
+    text-align: center;
+}
+.stat-value{
+    color: #16a34a;
+    font-size: 22px;
+    font-weight: 700;
+}
+.stat-label{
+    font-size: 12px;
+    color: #555;
+}
+
+.filter-pill{
+    border: none;
+    padding: 10px 18px;
+    border-radius: 20px;
+    background: #16a34a;
+    color: #fff;
+    font-weight: 600;
+    cursor: pointer;
+    margin-bottom: 15px;
+}
+
+.bus-card{
+    background: #fff;
+    border-radius: 16px;
+    margin-bottom: 15px;
+    padding: 20px;
+}
+.bus-card-header{
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    cursor: pointer;
+}
+.bus-icon{
+    width: 45px;
+    height: 45px;
+    background: #dcfce7;
+    border-radius: 10px;
+}
+.bus-card-header h2{
+    font-size: 18px;
+    flex: 1;
+}
+.dropdown-arrow{
+    color: #9ca3af;
+    font-weight: 900;
+}
+
+.tags{
+    display: flex;
+    gap: 8px;
+    margin-top: 15px;
+}
+.tag{
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 13px;
+}
+.tag-time{
+    background: #ede9fe;
+    color: #5b21b6;
+    border: 1px solid #c4b5fd;
+}
+.tag-fare{
+    background: #ffedd5;
+    border: 1px solid #fbbf24;
+    color: #9a3412;
+}
+.tag-stops{
+    background: #d1fae5;
+    border: 1px solid #16a34a;
+    color: #334155;
+}
+.tags + .tags{
+    margin-top: 8px;
+}
+
+.steps{
+   
+    margin-top: 20px;
+}
+.step{
+    display: flex;
+    gap: 15px;
+    padding-bottom: 20px;
+}
+.step-number{
+    width: 30px;
+    height: 30px;
+    min-width: 30px;
+    border-radius: 50%;
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+}
+.step-number.active{
+    background: #16a34a;
+}
+.step-number.blue{
+    background: #2563eb;
+}
+.step-number.gray{
+    background: #9ca3af;
+}
+.step-title{
+    font-weight: 600;
+}
+.step-desc{
+    font-size: 14px;
+    color: #777;
+    margin-top: 4px;
+}
+footer {
+   
+
+    width: 100%;
+    min-height: 20px;
+
+    text-align: center;
+
+    border-top: 1px solid #A4A9B4;
+
+    font-size: 12px;
+       padding: 5px;
+}
+
+/* Small phones */
+@media (max-width: 480px) {
+    .page {
+        min-width: 275px;
+        padding: 10px;
+    }
+    .route-header h1 {
+        font-size: 18px;
+    }
+    .stat-value {
+        font-size: 18px;
+    }
+    .stats-bar {
+        padding: 15px 0;
+    }
+    .bus-card {
+        padding: 15px;
+    }
+    .tag {
+        font-size: 11px;
+        padding: 5px 10px;
+    }
+}
+/* Small-to-mid phones (380px - 420px) */
+@media (min-width: 300px) and (max-width: 480px) {
+    .page {
+        min-width: 350px;
+        padding: 12px;
+    }
+    .route-header h1 {
+        font-size: 20px;
+    }
+    .stat-value {
+        font-size: 20px;
+    }
+    .stats-bar {
+        padding: 18px 0;
+    }
+    .bus-card {
+        padding: 18px;
+    }
+    .tag {
+        font-size: 12px;
+        padding: 5px 11px;
+    }
+}
+
+/* Tablets and larger */
+@media (min-width: 768px) {
+    .page {
+        min-width: 700px;
+    }
+}
+
+/* Laptop and larger */
+@media (min-width: 1024px) {
+    .page {
+        min-width: 1000px;
+        padding: 30px;
+    }
+    .route-header h1 {
+        font-size: 26px;
+    }
+    .stat-value {
+        font-size: 24px;
+    }
+    .bus-card {
+        padding: 25px;
+    }
+}
