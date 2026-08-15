@@ -6,7 +6,7 @@ function FindRoot() {
         <>
             <header>
                 <div className="logo">
-                    🚌DhaksBusFinder
+                    🚌LocalLine
                 </div>
 
                 <div className="headercontent">

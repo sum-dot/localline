@@ -52,6 +52,8 @@
 
 body {
   margin: 0;
+  background-color: #ffffff;
+  color: #1a1a1a;
 }
 
 #root {

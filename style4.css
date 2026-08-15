@@ -524,7 +524,7 @@ header {
     padding: 5px 6px;
 
     border-radius: 20px;
-color:black;
+    color:black;
     font-size: 9PX;
 
     margin-right: 3px;
@@ -775,4 +775,5 @@ footer {
     border-radius: 25px;
 
     font-size: 15px;
+}
 }
