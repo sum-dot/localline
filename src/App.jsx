@@ -1,3 +1,4 @@
+
 //import FindRoot from "./pages/FindRoot";
 import Registration from "./pages/Register";
 
@@ -5,7 +6,7 @@ import Registration from "./pages/Register";
 function App() {
   return (
     
-    //<FindRoot />
+   // <FindRoot />
         <Registration />
           
   );
