@@ -2,28 +2,7 @@ import "./BusSearchResult.css";
 
 function BusSearchResult() {
   return (
-    <>
-      <header>
-        <div className="logo">🚌LocalLine</div>
-
-        <div className="headercontent">
-          <a href="#">Login</a>
-          <a href="#">Register</a>
-        </div>
-      </header>
-
-      <div className="navigation">
-        <a href="#">🔍FindRoute</a>
-        <a href="#">🚌BusSearch</a>
-      </div>
-
       <div className="bus-search-page">
-        <div className="search-card">
-          <h2>Search a Bus</h2>
-          <p>Find a bus by name and see its full route</p>
-          <input type="text" placeholder="e.g. 13 No. Bus Route Dhaka" />
-        </div>
-
         <div className="result-card">
           <div className="result-header">
             <span className="bus-icon">🚌</span>
@@ -52,7 +31,6 @@ function BusSearchResult() {
           </div>
         </div>
       </div>
-    </>
   );
 }
 
