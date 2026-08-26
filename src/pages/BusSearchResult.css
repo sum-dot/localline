@@ -1,0 +1,67 @@
+
+.bus-search-page {
+  padding: 2rem;
+  max-width: 920px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+
+.result-card {
+  
+  background: white;
+  border-radius: 12px;
+  padding: 1.5rem;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+}
+.result-header {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+}
+
+.bus-icon {
+  font-size: 1.5rem;
+  background: #eaf7ee;
+  padding: 0.6rem;
+  border-radius: 8px;
+}
+
+.tag {
+  display: inline-block;
+  background: #e8ecff;
+  color: #3b4bd8;
+  font-size: 0.75rem;
+  padding: 0.2rem 0.6rem;
+  border-radius: 999px;
+  margin-top: 0.3rem;
+}
+
+.route-summary {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 1.2rem;
+  color: #333;
+}
+
+.stops-row {
+  display: flex;
+  gap: 1rem;
+  overflow-x: auto;
+  margin-top: 1rem;
+  padding-bottom: 0.5rem;
+}
+
+.stop {
+  text-align: center;
+  font-size: 0.8rem;
+  white-space: nowrap;
+  color: #666;
+}
+
+.stop.active {
+  color: #1e9e4f;
+  font-weight: bold;
+}
