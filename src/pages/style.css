@@ -21,6 +21,9 @@
     width: 440px;
     height: 480px;
     padding: 30px;
+    border: 1px solid rgb(5,144,51); 
+    border-radius: 30px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     
 }
 .login-header{
@@ -91,8 +94,10 @@ a:hover{
         width: 220px;
         padding: 20px;
         height: auto;
+        
+
     }
-    .login-header header {
+    .login-header h3 {
         align-items: center;
         width: 200px;
         font-size: 22px;
@@ -109,7 +114,7 @@ a:hover{
 /* Small-to-mid phones (361px - 600px) */
 @media (min-width: 361px) and (max-width: 600px) {
     .login-box {
-        width: 100%;
+        width: 350px;
         padding: 20px;
         height: auto;
     }
@@ -130,7 +135,7 @@ a:hover{
 /* Large phones / small tablets (601px - 767px) */
 @media (min-width: 601px) and (max-width: 767px) {
     .login-box {
-        width: 100%;
+        width: 600px;
         padding: 20px;
         height: auto;
     }
@@ -151,13 +156,13 @@ a:hover{
 /* Tablets (768px - 1023px) */
 @media (min-width: 768px) and (max-width: 1023px) {
     .login-box {
-        width: 440px;
+        width: 700px;
     }
 }
 /* Laptop and larger */
 @media (min-width: 1024px) {
     .login-box {
-        width: 480px;
+        width: 900px;
         padding: 40px;
     }
     .login-header header {

@@ -1,4 +1,6 @@
+
 import "./style.css";
+import { Link } from "react-router";
 
 export default function Login() {
     return (
@@ -17,7 +19,7 @@ export default function Login() {
                 <button className="submit-btn" type="submit">Sign In</button>
             </div>
             <div className="sign-up-link">
-                <p>Don't have account? <a href="#">Sign Up</a></p>
+                    <p>Don't have account? <Link to="/register">Sign Up</Link></p>
             </div>
             </div>
         </div>
