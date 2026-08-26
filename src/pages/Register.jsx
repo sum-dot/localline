@@ -3,7 +3,7 @@ import "../../style4.css";
 
 function Registration() {
     return (
-    
+<div className="registration-page-wrapper">
  <div className="Registrationbox">
 
 <div className="Registrationheader">
@@ -26,7 +26,7 @@ function Registration() {
 </div>
 
    
-     
+     </div>
 </div>
     );
 }

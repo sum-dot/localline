@@ -3,19 +3,7 @@ import './BusSearch.css';
 function BusSearch() {
     return (
       <>
-        <header>
-          <div className="logo">🚌LocalLine</div>
-
-          <div className="headercontent">
-            <a href="#">Login</a>
-            <a href="#">Register</a>
-          </div>
-        </header>
-
-        <div className="navigation">
-          <a href="#">🔍FindRoute</a>
-          <a href="#">🚌BusSearch</a>
-        </div>
+       
 
         <div className="bus-search-box">
           <div className="search-box">
