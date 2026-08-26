@@ -1,25 +1,16 @@
 import "../../style4.css";
-
+import { useState } from "react";
+import RouteFinder from "./RouteFinder";
 
 function FindRoot() {
+    const [showRouteFinder, setShowRouteFinder] = useState(false);
+
+    const handleFindBus = () => {
+        setShowRouteFinder(true);
+    };
+
     return (
         <>
-            <header>
-                <div className="logo">
-                    🚌LocalLine
-                </div>
-
-                <div className="headercontent">
-                    <a href="#">Login</a>
-                    <a href="#">Register</a>
-                </div>
-            </header>
-
-            <div className="navigation">
-                <a href="#">🔍FindRoute</a>
-                <a href="#">🚌BusSearch</a>
-            </div>
-
             <div className="findbox">
 
                 <h3>Where are you going?</h3>
@@ -44,7 +35,7 @@ function FindRoot() {
 
                 <div className="inputbox">
 
-                    <button className="submitbtn">
+                    <button className="submitbtn" onClick={handleFindBus}>
                         Find Bus
                     </button>
 
@@ -62,10 +53,9 @@ function FindRoot() {
                     <span>Sadarghat → Mirpur 10</span>
 
                 </div>
-    </div>
-                
+            </div>
 
-        
+            {showRouteFinder && <RouteFinder />}
         </>
     );
 }

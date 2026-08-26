@@ -1,62 +1,16 @@
 
-  /*header*/
-header {
-    width: 100%;
-    height: 50px;
-    background-color: #059033;
-    color: white;
-
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-
-    padding: 0 20px;
-}
-/*logo*/
-.logo {
-    font-size: 18px;
-}
-
-/*login and register*/
-
-.headercontent a {
-    color: white;
-    text-decoration: none;
-    font-size: 14px;
-    margin-left: 8px;
-}
-/*bussearch and find route*/
-
-.navigation {
-    width: 100%;
-    height: 50px;
-    background-color: white;
-
-    display: flex;
-    justify-content: center;
-    align-items: center;
-
-    gap: 30px;
-}
-
-.navigation a {
-    color: #059033;
-    font-size: 18px;
-    text-decoration: none;
-}
 
 .findbox {
     background-color: #f8f9fa;
 
-    width: 95%;
+    width: 900px;
     min-height: 300px;
- 
-    padding:15PX;
 
-    /*border: 1px solid #A4A9B4;*/
-    border: 1px solid #000000;
-    border-radius: 30px;
-    margin:30px  auto ;
+    padding: 50px;
+
+    border: 1px solid #A4A9B4;
+    border-radius: 50px;
+    margin:70px  auto ;
     
 
     
@@ -69,16 +23,15 @@ header {
 }
 
 .findbox h5 {
-    font-size: 14px;
+    font-size: 15px;
     text-align: center;
       color: black;
     margin-bottom: 15px;
 }
 
-
 .bus-search-box{
     height: 100px;
-    background-color: white;
+    
     padding: 6rem;
     max-width: 100%;
     margin: 0 auto;

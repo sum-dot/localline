@@ -4,8 +4,11 @@
     box-sizing: border-box;
 }
 
-body {
-    background-color: white;
+.registration-page-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
 }
 /*registration*/
 .Registrationbox {
@@ -57,7 +60,7 @@ body {
 }
 /*header*/
 header {
-    width: 980px;
+    width: 100%;
     height: 50px;
     background-color: #059033;
     color: white;
@@ -85,7 +88,7 @@ header {
 /*bussearch and find route*/
 
 .navigation {
-    width: 980px;
+    width: 100%;
     height: 50px;
     background-color: white;
 
@@ -106,7 +109,7 @@ header {
 .findbox {
     background-color: #f8f9fa;
 
-    width: 900px;
+    width: 1700px;
     min-height: 300px;
 
     padding: 50px;
@@ -272,6 +275,7 @@ header {
 }
 
 .navigation a {
+    width: 100%;
     color: #059033;
     font-size: 18px;
     text-decoration: none;

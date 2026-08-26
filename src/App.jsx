@@ -1,31 +1,32 @@
 import './App.css'
-//import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { Routes, Route, useLocation } from "react-router";
+import Header from "./components/Header";
+import SubNav from "./components/SubNav";
+
 import FindRoot from "./pages/FindRoot";
-import RouteFinder from "./pages/RouteFinder";
-
-//import Registration from "./pages/Register";
-
-//import Login from "./pages/Login";
-
-
 import BusSearch from "./pages/BusSearch";
-import BusSearchResult from "./pages/BusSearchResult";
-//import Profile from "./pages/Profile";
+import Profile from "./pages/Profile";
+import Login from "./pages/Login";
+import Registration from "./pages/Register";
 
 function App() {
+    const location = useLocation();
+    const hideNav = location.pathname === "/login" || location.pathname === "/register";
+
     return (
-      <div>
-        {/* <Login /> */}
-         <FindRoot />
-         <RouteFinder /> 
-        {/* <BusSearch />   */}
-         {/* <BusSearchResult />  */}
-        {/*<Registration />*/}
+        <div>
+            {!hideNav && <Header />}
+            {!hideNav && <SubNav />}
 
-        {/* <Profile />*/}
-      </div>
+            <Routes>
+                <Route path="/" element={<FindRoot />} />
+                <Route path="/bus-search" element={<BusSearch />} />
+                <Route path="/profile" element={<Profile />} />
+                <Route path="/login" element={<Login />} />
+                <Route path="/register" element={<Registration />} />
+            </Routes>
+        </div>
     );
-
 }
 
 export default App;

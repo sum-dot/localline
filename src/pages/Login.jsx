@@ -2,9 +2,10 @@ import "./style.css";
 
 export default function Login() {
     return (
-        <div className="login-box">
-            <div className="login-header">
-                <header>Login</header>
+        <div className="login-page-wrapper">
+              <div className="login-box">
+           <div className="login-header">
+                <h3>Login</h3>
             </div>
             <div className="input-box">
                 <input type="text" className="input-field" placeholder="Email" autoComplete="off" required />
@@ -17,6 +18,7 @@ export default function Login() {
             </div>
             <div className="sign-up-link">
                 <p>Don't have account? <a href="#">Sign Up</a></p>
+            </div>
             </div>
         </div>
     );
