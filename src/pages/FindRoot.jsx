@@ -8,6 +8,10 @@ function FindRoot() {
         const[to,setTo]=useState("");
 
     const handleFindBus = () => {
+            if (!from || !to) {
+                
+        return;
+    }
         setShowRouteFinder(true);
     };
 
@@ -61,8 +65,7 @@ function FindRoot() {
                     <span onClick={()=>{  setFrom("Mirpur 10");
                             setTo("Motijheel")}}>
                                 Mirpur 10 → Motijheel</span>
-                    <span onClick={()=>{setFrom(Gulistan)
-                        setTo(Abdullah)}}>
+                    <span onClick={()=>{setFrom("Gulistan"); setTo("Abdullah");}}>
                             Gulistan → Abdullah</span>
                     <span   onClick={() => {
                             setFrom("Sadarghat");

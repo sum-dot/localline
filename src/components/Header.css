@@ -54,11 +54,12 @@ header {
 
 /* Mobile */
 
-@media (max-width: 200px) {
+@media (max-width: 600px) {
 
     header {
         min-height: 50px;
         padding: 0 10px;
+        width:100%;
     }
 
     .logo {
