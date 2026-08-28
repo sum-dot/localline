@@ -1,10 +1,18 @@
 import "../../style4.css";
+import { Link } from "react-router";
+
 
 
 function Registration() {
+       
     return (
 <div className="registration-page-wrapper">
+   
+                <Link to="/" className="backbtn">
+                    ←
+                </Link>
  <div className="Registrationbox">
+   
 
 <div className="Registrationheader">
     <h3>Registration</h3>
