@@ -20,10 +20,14 @@ function Registration() {
             return;
         }
 
-        
-        if (password !== confirmPassword) {
-            alert("Password does not match");
-            return;
+        if (password.length < 6) {
+          alert("Password must be at least 6 characters");
+          return;
+        }
+
+        if (!email.includes("@")) {
+          alert("Please enter a valid email");
+          return;
         }
 
         try {

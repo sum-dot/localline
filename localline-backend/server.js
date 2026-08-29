@@ -1,11 +1,3 @@
-// require("dotenv").config();
-// const express = require("express");
-// const mongoose = require("mongoose");
-// const cors = require("cors");
-// const cookieParser = require("cookie-parser");
-// const authRoutes = require("./routes/auth");
-// const userRoutes = require("./routes/user");
-
 import "dotenv/config";
 import express from "express";
 import mongoose from "mongoose";
