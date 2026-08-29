@@ -3,7 +3,6 @@ import "./style2.css";
 import busIcon from "../assets/bus-icon.png";
 
 function BusCard(props) {
-    
     const isThisCardOpen = props.expanded;
 
     function handleHeaderClick() {
@@ -22,7 +21,6 @@ function BusCard(props) {
                 <h2>{props.name}</h2>
                 <span className="dropdown-arrow">{arrowSymbol}</span>
             </div>
-
             <div className="tags">
                 <span className="tag tag-time">{props.time}</span>
                 <span className="tag tag-fare">{props.fare}</span>
@@ -30,7 +28,6 @@ function BusCard(props) {
             <div className="tags">
                 <span className="tag tag-stops">{props.stops} stops</span>
             </div>
-
             {isThisCardOpen === true && (
                 <div className="steps">
                     <div className="step">
@@ -67,7 +64,7 @@ function BusCard(props) {
     );
 }
 
-export default function RouteFinder() {
+export default function RouteFinder(props) {
     const state = useState(null);
     const openCard = state[0];
     const setOpenCard = state[1];
@@ -86,10 +83,9 @@ export default function RouteFinder() {
     return (
         <div className="page">
             <div className="route-header">
-                <h1>Mohammadpur <span className="arrow">→</span> Shahbag</h1>
+                <h1>{props.from} <span className="arrow">→</span> {props.to}</h1>
                 <span className="badge-light">18 direct</span>
             </div>
-
             <div className="stats-bar">
                 <div className="stat">
                     <div className="stat-value">৳30-50</div>
@@ -104,9 +100,7 @@ export default function RouteFinder() {
                     <div className="stat-label">EST. MIN</div>
                 </div>
             </div>
-
             <button className="filter-pill active">🚌 All Direct (2)</button>
-
             <BusCard
                 id="brtc"
                 name="BRTC Bus"
@@ -116,7 +110,6 @@ export default function RouteFinder() {
                 expanded={brtcIsOpen}
                 onToggle={handleToggle}
             />
-
             <BusCard
                 id="meshkat"
                 name="Meshkat Bus"
@@ -126,7 +119,6 @@ export default function RouteFinder() {
                 expanded={meshkatIsOpen}
                 onToggle={handleToggle}
             />
-
             <footer>© 2026 Route Finder · 179 stops · 182 routes</footer>
         </div>
     );
