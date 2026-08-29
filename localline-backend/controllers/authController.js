@@ -1,6 +1,6 @@
-const jwt = require("jsonwebtoken");
-const bcrypt = require("bcryptjs");
-const User = require("../models/User");
+import jwt from "jsonwebtoken";
+import bcrypt from "bcryptjs";
+import User from "../models/User.js";
 
 const lifetime = 3600000; // 1 hour in ms
 
@@ -13,7 +13,7 @@ const cookieOptions = {
   path: "/",
 };
 
-const register = async (req, res) => {
+export const register = async (req, res) => {
   try {
     const { name, email, password } = req.body;
 
@@ -39,7 +39,7 @@ const register = async (req, res) => {
   }
 };
 
-const login = async (req, res) => {
+export const login = async (req, res) => {
   try {
     const { email, password } = req.body;
     const user = await User.findOne({ email });
@@ -51,7 +51,7 @@ const login = async (req, res) => {
     const token = jwt.sign(
       { id: user._id, email: user.email },
       process.env.JWT_SECRET,
-      { expiresIn: lifetime / 1000 }
+      { expiresIn: lifetime / 1000 },
     );
 
     res.cookie("token", token, { ...cookieOptions, maxAge: lifetime });
@@ -64,12 +64,12 @@ const login = async (req, res) => {
   }
 };
 
-const logout = (req, res) => {
+export const logout = (req, res) => {
   res.clearCookie("token", cookieOptions);
   return res.status(200).json({ message: "Logout successful" });
 };
 
-const getMe = async (req, res) => {
+export const getMe = async (req, res) => {
   try {
     const user = await User.findById(req.user.id).select("-password");
     if (!user) return res.status(404).json({ error: "User not found" });
@@ -81,4 +81,4 @@ const getMe = async (req, res) => {
   }
 };
 
-module.exports = { register, login, logout, getMe };
+

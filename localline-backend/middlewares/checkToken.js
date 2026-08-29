@@ -1,4 +1,4 @@
-const jwt = require("jsonwebtoken");
+import jwt from "jsonwebtoken";
 
 const isProd = process.env.NODE_ENV === "production";
 
@@ -26,4 +26,4 @@ const checkToken = (req, res, next) => {
   });
 };
 
-module.exports = checkToken;
+export default checkToken;
