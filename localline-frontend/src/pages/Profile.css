@@ -16,17 +16,26 @@
 }
 
 .back-btn {
-  align-self: flex-start;
-  margin: 0 auto 0.75rem 0;
-  width: 100%;
-  max-width: 440px;
-  background: none;
-  border: none;
-  color: #059033;
-  font-weight: 600;
-  cursor: pointer;
-  font-size: 0.95rem;
-  text-align: left;
+    position: fixed;
+    top: 15px;
+    left: 15px;
+
+    background-color: #059033;
+    color: white;
+
+    border: none;
+    border-radius: 20px;
+
+    padding: 8px 15px;
+
+    font-size: 14px;
+    text-decoration: none;
+
+    cursor: pointer;
+}
+
+.back-tn:hover {
+    background-color: #047a2b;
 }
 
 .profile-card {
@@ -34,7 +43,7 @@
   flex-direction: column;
   gap: 1.25rem;
   background: white;
-  border: 1px solid #e2e2e2;
+  border: 1px solid rgb(5,144,51); 
   border-radius: 16px;
   padding: 2.5rem;
   box-shadow: 0 4px 16px rgba(5, 144, 51, 0.15);
@@ -90,3 +99,31 @@
 
 .btn-primary { background: #059033; color: white; }
 .btn-outline { background: white; color: #059033; border: 1.5px solid #059033; }
+
+/* Small–mid phones */
+@media (min-width: 360px) {
+  .profile-page { padding: 2.5rem 1.25rem; }
+  .profile-card { padding: 1.75rem; }
+}
+
+/* Large phones / small tablets */
+@media (min-width: 480px) {
+  .profile-actions { flex-direction: row; }
+  .back-btn, .profile-card { max-width: 440px; }
+  .profile-title { font-size: 1.6rem; }
+}
+
+/* Tablets */
+@media (min-width: 768px) {
+  .profile-page { padding: 4rem 1.5rem; }
+  .profile-card { padding: 2.5rem; max-width: 480px; gap: 1.25rem; }
+  .back-btn { max-width: 480px; font-size: 0.95rem; }
+  .profile-details { padding: 1rem 1.1rem; }
+  .profile-details input { padding: 0.6rem 0.8rem; font-size: 1rem; }
+  .btn-primary, .btn-outline { padding: 0.7rem; font-size: 0.95rem; }
+}
+
+/* Laptop and larger — current desktop sizing already covers this from the 768px block */
+@media (min-width: 1024px) {
+  .profile-page { padding: 5rem 1.5rem; }
+}

@@ -1,55 +1,86 @@
-
-
 .findbox {
-    background-color: #f8f9fa;
-
-    width: 900px;
-    min-height: 300px;
-
-    padding: 50px;
-
-    border: 1px solid #A4A9B4;
-    border-radius: 50px;
-    margin:70px  auto ;
-    
-
-    
+  background-color: #f8f9fa;
+  width: 100%;
+  min-height: 300px;
+  padding: 1.5rem;
+  border: 1px solid #A4A9B4;
+  border-radius: 20px;
+  margin: 1.5rem auto;
+  box-sizing: border-box;
 }
 
 .findbox h3 {
-    font-size: 20px;
-    text-align: center;
-    color: black;
+  font-size: 1.1rem;
+  text-align: center;
+  color: black;
 }
 
 .findbox h5 {
-    font-size: 15px;
-    text-align: center;
-      color: black;
-    margin-bottom: 15px;
+  font-size: 0.85rem;
+  text-align: center;
+  color: black;
+  margin-bottom: 15px;
 }
 
-.bus-search-box{
-    height: 100px;
-    
-    padding: 6rem;
-    max-width: 100%;
-    margin: 0 auto;
-    display: flex;
-    flex-direction: column;
-    gap: 1.5rem;
-    text-align: left;
-    color: black;
+.bus-search-box {
+  padding: 1rem 0;
+  max-width: 90%;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  text-align: left;
+  color: black;
 }
 
 .search-box,
-.search-box input{
-    background-color: white;
-    width: 100%;
-    padding: 0.75rem 1rem;
-    margin-top: 1rem;
-    border: .75px solid #7d7c7c;
-    border-radius: 6px;
-    font-size: 1rem;
-    box-sizing: border-box;
+.search-box input {
+  background-color: white;
+  width: 100%;
+  padding: 0.65rem 0.9rem;
+  margin-top: 0.5rem;
+  border: .75px solid #7d7c7c;
+  border-radius: 6px;
+  font-size: 0.95rem;
+  box-sizing: border-box;
+}
+
+/* Small–mid phones */
+@media (min-width: 360px) {
+  .findbox { padding: 2rem; }
+  .findbox h3 { font-size: 1.2rem; }
+}
+
+/* Large phones / small tablets */
+@media (min-width: 480px) {
+  .findbox { border-radius: 28px; margin: 2rem auto; }
+  .bus-search-box { gap: 1.25rem; }
+}
+
+/* Tablets */
+@media (min-width: 768px) {
+  .findbox {
+    width: 90%;
+    max-width: 700px;
+    padding: 2.5rem;
+    border-radius: 36px;
+  }
+  .findbox h3 { font-size: 1.4rem; }
+  .findbox h5 { font-size: 0.95rem; }
+  .bus-search-box { padding: 1.5rem 0; gap: 1.5rem; }
+  .search-box, .search-box input { padding: 0.75rem 1rem; font-size: 1rem; }
+}
+
+/* Laptop and larger */
+@media (min-width: 1024px) {
+  .findbox {
+    width: 900px;
+    max-width: 900px;
+    padding: 50px;
+    border-radius: 50px;
+    margin: 70px auto;
+  }
+  .findbox h3 { font-size: 20px; }
+  .findbox h5 { font-size: 15px; }
+  .bus-search-box { padding: 6rem; gap: 1.5rem; }
 }

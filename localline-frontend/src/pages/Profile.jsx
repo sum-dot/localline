@@ -50,7 +50,7 @@ function Profile() {
   return (
     <div className="profile-page">
       <button className="back-btn" onClick={() => navigate("/")}>
-        ← Back
+        ← 
       </button>
       <h1 className="profile-title">Profile</h1>
       <div className="profile-card">
