@@ -1,15 +1,17 @@
-const express = require("express");
-const { register, login, logout } = require("../controllers/authController");
-const checkToken = require("../middlewares/checkToken");
+import express from "express";
+import {
+  register,
+  login,
+  logout,
+  getMe,
+} from "../controllers/authController.js";
+import checkToken from "../middlewares/checkToken.js";
 
 const router = express.Router();
 
 router.post("/register", register);
 router.post("/login", login);
 router.post("/logout", checkToken, logout);
+router.get("/me", checkToken, getMe);
 
-router.get("/me", checkToken, (req, res) => {
-  res.status(200).json({ user: req.user });
-});
-
-module.exports = router;
+export default router;
