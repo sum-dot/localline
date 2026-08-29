@@ -8,7 +8,7 @@ body{
     background: #f3f4f6;    
 }
 .page{
-    min-width: 500px;
+    width: 100%;
     max-width: 900px;
     margin: 0 auto;
     padding: 15px;
@@ -180,7 +180,7 @@ footer {
 /* Small phones */
 @media (max-width: 480px) {
     .page {
-        min-width: 275px;
+        
         padding: 10px;
     }
     .route-header h1 {
@@ -203,7 +203,7 @@ footer {
 /* Small-to-mid phones (380px - 420px) */
 @media (min-width: 300px) and (max-width: 480px) {
     .page {
-        min-width: 350px;
+        width: 100%;
         padding: 12px;
     }
     .route-header h1 {
@@ -224,17 +224,12 @@ footer {
     }
 }
 
-/* Tablets and larger */
-@media (min-width: 768px) {
-    .page {
-        min-width: 700px;
-    }
-}
+
 
 /* Laptop and larger */
 @media (min-width: 1024px) {
     .page {
-        min-width: 1000px;
+        width: 100%;
         padding: 30px;
     }
     .route-header h1 {

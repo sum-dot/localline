@@ -1,36 +1,22 @@
 import { useState } from "react";
 import "./style.css";
-import { Link, useNavigate } from "react-router";
+import { Link } from "react-router";
+import { useAuthContext } from "../context/AuthContext";
 
 export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
-  const navigate = useNavigate();
+  const { login } = useAuthContext();
 
   const handleSubmit = async (event) => {
     event.preventDefault();
     setError("");
 
     try {
-      const response = await fetch("http://localhost:4000/auth/login", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        credentials: "include", // required so the login cookie gets stored
-        body: JSON.stringify({ email, password }),
-      });
-
-      const data = await response.json();
-
-      if (!response.ok) {
-        setError(data.error || "Login failed");
-        return;
-      }
-
-      console.log("Logged in:", data);
-      navigate("/"); // redirect wherever makes sense after login
+      await login(email, password);
     } catch (err) {
-      setError("Something went wrong. Is the backend running?");
+      setError(err.message || "Something went wrong. Is the backend running?");
     }
   };
 
@@ -72,7 +58,7 @@ export default function Login() {
         </form>
         <div className="sign-up-link">
           <p>
-            Don't have account? <Link to="/register">Sign Up</Link>
+            Don't have account? <Link to="/register">Register</Link>
           </p>
         </div>
       </div>

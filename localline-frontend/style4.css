@@ -117,17 +117,11 @@ body {
 
 .findbox {
     background-color: #f8f9fa;
-
-    width: 600px;
-    max-width: calc(100% - 40px);
-
+    width: 600;
     min-height: 300px;
-
-    padding: 40px;
-
+    padding: 50px;
     border: 1px solid #A4A9B4;
-    border-radius: 40px;
-
+    border-radius: 50px;
     margin: 70px auto;
 }
 
@@ -440,5 +434,5 @@ footer {
         padding: 5px 7px;
     }
   
-  .
+  
 }

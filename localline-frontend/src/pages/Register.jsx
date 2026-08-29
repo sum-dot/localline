@@ -29,7 +29,7 @@ function Registration() {
         try {
 
          
-            const response = await fetch("http://localhost:4000/register", {
+            const response = await fetch("http://localhost:4000/auth/register", {
                 method: "POST",
 
                 headers: {

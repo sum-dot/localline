@@ -11,7 +11,8 @@ import Registration from "./pages/Register";
 
 function App() {
     const location = useLocation();
-    const hideNav = location.pathname === "/login" || location.pathname === "/register";
+    const noNavPaths = ["/login", "/register", "/profile"];
+    const hideNav = noNavPaths.includes(location.pathname);
 
     return (
         <div>
