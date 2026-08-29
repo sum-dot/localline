@@ -75,7 +75,7 @@ function FindRoot() {
                 </div>
             </div>
 
-            {showRouteFinder && <RouteFinder />}
+           {showRouteFinder && <RouteFinder from={from} to={to} />}
         </>
     );
 }

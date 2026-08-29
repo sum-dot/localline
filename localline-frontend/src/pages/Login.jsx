@@ -12,7 +12,6 @@ export default function Login() {
   const handleSubmit = async (event) => {
     event.preventDefault();
     setError("");
-
     try {
       await login(email, password);
     } catch (err) {
@@ -22,6 +21,9 @@ export default function Login() {
 
   return (
     <div className="login-page-wrapper">
+      <Link to="/" className="backbtn">
+        ←
+      </Link>
       <div className="login-box">
         <div className="login-header">
           <h3>Login</h3>

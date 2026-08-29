@@ -13,6 +13,29 @@
     min-height: 100vh;
     background: #fff;
 }
+.backbtn {
+    position: fixed;
+    top: 15px;
+    left: 15px;
+
+    background-color: #059033;
+    color: white;
+
+    border: none;
+    border-radius: 20px;
+
+    padding: 8px 15px;
+
+    font-size: 14px;
+    text-decoration: none;
+
+    cursor: pointer;
+}
+
+.backbtn:hover {
+    background-color: #047a2b;
+}
+
 
 .login-box{
     display: flex;
