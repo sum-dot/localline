@@ -45,3 +45,13 @@
     padding: 0.5rem 1rem;
     border-radius: 6px;
 }
+
+.logout-btn {
+  background: #059033;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 0.6rem;
+  cursor: pointer;
+  font-weight: bold;
+}

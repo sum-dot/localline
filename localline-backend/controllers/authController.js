@@ -69,4 +69,16 @@ const logout = (req, res) => {
   return res.status(200).json({ message: "Logout successful" });
 };
 
-module.exports = { register, login, logout };
+const getMe = async (req, res) => {
+  try {
+    const user = await User.findById(req.user.id).select("-password");
+    if (!user) return res.status(404).json({ error: "User not found" });
+    return res
+      .status(200)
+      .json({ id: user._id, name: user.name, email: user.email });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};
+
+module.exports = { register, login, logout, getMe };
