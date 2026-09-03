@@ -8,6 +8,7 @@ import BusSearch from "./pages/BusSearch";
 import Profile from "./pages/Profile";
 import Login from "./pages/Login";
 import Registration from "./pages/Register";
+import PublicRoute from "./routes/PublicRoute";
 
 function App() {
     const location = useLocation();
@@ -23,8 +24,10 @@ function App() {
                 <Route path="/" element={<FindRoot />} />
                 <Route path="/bus-search" element={<BusSearch />} />
                 <Route path="/profile" element={<Profile />} />
-                <Route path="/login" element={<Login />} />
-                <Route path="/register" element={<Registration />} />
+                <Route element={<PublicRoute />}>
+                    <Route path="/login" element={<Login />} />
+                    <Route path="/register" element={<Registration />} />
+                </Route>
             </Routes>
         </div>
     );
