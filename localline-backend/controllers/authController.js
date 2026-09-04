@@ -22,18 +22,26 @@ export const register = async (req, res) => {
     }
 
     const existingUser = await User.findOne({ email });
+
     if (existingUser) {
       return res.status(400).json({ error: "Email already registered" });
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
-    const user = new User({ name, email, password: hashedPassword });
+
+    const user = new User({
+      name,
+      email,
+      password: hashedPassword
+    });
+
     await user.save();
 
     return res.status(201).json({
-      message: "User registered successfully",
-      userId: user._id,
+      message: "Registration successful"
     });
+    
+
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
@@ -80,5 +88,3 @@ export const getMe = async (req, res) => {
     res.status(500).json({ error: err.message });
   }
 };
-
-

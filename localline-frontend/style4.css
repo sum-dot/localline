@@ -436,3 +436,32 @@ footer {
   
   
 }
+.success-message {
+    color: green;
+    text-align: center;
+}
+
+
+
+.password-box input::-ms-reveal,
+.password-box input::-ms-clear {
+    display: none;
+}
+
+
+.password-box {
+    position: relative;
+}
+
+.password-box .input-field {
+    padding-right: 45px;
+}
+
+.eye-button {
+    width: 22px;
+    height: 22px;
+    position: absolute;
+    right: 10px;
+    top: 10px;
+    cursor: pointer;
+}
