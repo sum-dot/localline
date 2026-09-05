@@ -20,6 +20,13 @@ export const createUser = async (req, res) => {
 
 export const updateUser = async (req, res) => {
   try {
+    const existingUser = await User.findOne({
+      email: req.body.email,
+      _id: { $ne: req.user.id },
+    });
+    if (existingUser) {
+      return res.status(400).json({ error: "Email already exists." });
+    }
     const updated = await User.findByIdAndUpdate(
       req.user.id,
       { name: req.body.name, email: req.body.email },

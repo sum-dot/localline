@@ -10,6 +10,7 @@ function Profile() {
   const [nameDraft, setNameDraft] = useState("");
   const [emailDraft, setEmailDraft] = useState("");
   const navigate = useNavigate();
+  const [saveError, setSaveError] = useState("");
 
   useEffect(() => {
     if (checkingAuth) return;
@@ -33,6 +34,7 @@ function Profile() {
   };
 
   const handleSave = async () => {
+    setSaveError("");
     const res = await fetch("http://localhost:4000/users/me", {
       method: "PUT",
       credentials: "include",
@@ -40,6 +42,12 @@ function Profile() {
       body: JSON.stringify({ name: nameDraft, email: emailDraft }),
     });
     const updated = await res.json();
+
+    if (!res.ok) {
+      setSaveError(updated.error || "Something went wrong");
+      return;
+    }
+
     setMe(updated);
     setEditing(false);
   };
@@ -50,7 +58,7 @@ function Profile() {
   return (
     <div className="profile-page">
       <button className="back-btn" onClick={() => navigate("/")}>
-        ← 
+        ←
       </button>
       <h1 className="profile-title">Profile</h1>
       <div className="profile-card">
@@ -75,6 +83,9 @@ function Profile() {
         <div className="profile-actions">
           {editing ? (
             <>
+              {saveError && (
+                <p style={{ color: "red", fontSize: "0.85rem" }}>{saveError}</p>
+              )}
               <button className="btn-primary" onClick={handleSave}>
                 Save
               </button>
@@ -83,6 +94,8 @@ function Profile() {
                 onClick={() => {
                   setEditing(false);
                   setEmailDraft(me.email);
+                  setNameDraft(me.name);
+                  setSaveError("");
                 }}
               >
                 Cancel
