@@ -1,12 +1,14 @@
 
 import "../../style4.css";
-import { Link } from "react-router";
+import { Link, useNavigate } from "react-router";
 import { useState } from "react";
 
 import eyeOpen from "../assets/eyeopen.png";
 import eyeClose from "../assets/eyeclose.png";
 
 function Registration() {
+
+    const navigate = useNavigate();
 
     const [name, setName] = useState("");
     const [email, setEmail] = useState("");
@@ -38,38 +40,34 @@ function Registration() {
             hasError = true;
         }
 
-      if (!email) {
-    setEmailError("Please enter your email");
-    hasError = true;
-}
-else if (
-    !email.includes("@") ||
-    !email.includes(".") ||
-    !email.includes("com")
-) {
-    setEmailError("Please enter a valid email");
-    hasError = true;
-}
+        if (!email) {
+            setEmailError("Please enter your email");
+            hasError = true;
+        }
+        else if (
+            !email.includes("@") ||
+            !email.includes(".") ||
+            !email.includes("com")
+        ) {
+            setEmailError("Please enter a valid email");
+            hasError = true;
+        }
 
-if (!password) {
-    setPasswordError("Please enter your password");
-    hasError = true;
-}
-else if (password.length < 6) {
-    setPasswordError("Password must be at least 6 characters");
-    hasError = true;
-}
+        if (!password) {
+            setPasswordError("Please enter your password");
+            hasError = true;
+        }
+        else if (password.length < 6) {
+            setPasswordError("Password must be at least 6 characters");
+            hasError = true;
+        }
 
         if (!confirmPassword) {
-            setConfirmPasswordError(
-                "Please confirm your password"
-            );
+            setConfirmPasswordError("Please confirm your password");
             hasError = true;
         }
         else if (password !== confirmPassword) {
-            setConfirmPasswordError(
-                "Password does not match"
-            );
+            setConfirmPasswordError("Password does not match");
             hasError = true;
         }
 
@@ -81,13 +79,12 @@ else if (password.length < 6) {
 
             const response = await fetch(
                 "http://localhost:4000/auth/register",
-                {
-                    method: "POST",
 
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
-
+                { method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+                  
                     body: JSON.stringify({
                         name,
                         email,
@@ -107,6 +104,8 @@ else if (password.length < 6) {
                 setPassword("");
                 setConfirmPassword("");
 
+                navigate("/profile");
+
             }
             else {
 
@@ -116,7 +115,6 @@ else if (password.length < 6) {
 
         }
         catch (error) {
-            
 
             setEmailError("Server error");
 

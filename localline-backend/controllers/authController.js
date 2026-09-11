@@ -13,18 +13,23 @@ const cookieOptions = {
   path: "/",
 };
 
+
 export const register = async (req, res) => {
   try {
     const { name, email, password } = req.body;
 
     if (!name || !email || !password) {
-      return res.status(400).json({ error: "All fields are required" });
+      return res.status(400).json({
+        error: "All fields are required"
+      });
     }
 
     const existingUser = await User.findOne({ email });
 
     if (existingUser) {
-      return res.status(400).json({ error: "Email already registered" });
+      return res.status(400).json({
+        error: "Email already registered"
+      });
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
@@ -38,14 +43,21 @@ export const register = async (req, res) => {
     await user.save();
 
     return res.status(201).json({
-      message: "Registration successful"
+      message: "Registration successful",
+      user: {
+        name: user.name,
+        email: user.email
+      }
     });
-    
 
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    res.status(500).json({
+      error: err.message
+    });
   }
 };
+
+
 
 export const login = async (req, res) => {
   try {
