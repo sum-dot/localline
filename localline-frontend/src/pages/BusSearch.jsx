@@ -12,6 +12,8 @@ function BusSearch() {
       .then((data) => setBuses(data));
   }, []);
 
+  let found = false;
+
   return (
     <>
       <div className="bus-search-box">
@@ -37,13 +39,22 @@ function BusSearch() {
         </div>
       </div>
 
-      {buses.map((bus) => {
-        if (bus.name.toLowerCase().includes(search.toLowerCase())) {
-          return <BusSearchResult key={bus._id} bus={bus} />;
-        }
+      {search !== "" &&
+        buses.map((bus) => {
+          if (bus.name.toLowerCase().includes(search.toLowerCase())) {
+            found = true;
 
-        return null;
-      })}
+            return <BusSearchResult key={bus._id} bus={bus} />;
+          }
+
+          return null;
+        })}
+
+      {search !== "" && found === false && (
+        <p style={{ textAlign: "center", marginTop: "20px" }}>
+          No bus found
+        </p>
+      )}
     </>
   );
 }
