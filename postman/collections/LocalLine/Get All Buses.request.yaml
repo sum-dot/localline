@@ -1,0 +1,4 @@
+$kind: http-request
+url: "{{baseUrl}}/buses"
+method: GET
+order: 4267890688338468

@@ -5,6 +5,7 @@ import cors from "cors";
 import cookieParser from "cookie-parser";
 import authRoutes from "./routes/auth.js";
 import userRoutes from "./routes/user.js";
+import busRoutes from "./routes/bus.js";
 
 const app = express();
 app.use(cors({ credentials: true, origin: process.env.CLIENT_URL }));
@@ -12,7 +13,7 @@ app.use(cookieParser());
 app.use(express.json());
 app.use("/auth", authRoutes);
 app.use("/users", userRoutes);
-
+app.use("/buses", busRoutes);
 mongoose
   .connect(process.env.DB_URL)
   .then(() => console.log("Connected to MongoDB"))

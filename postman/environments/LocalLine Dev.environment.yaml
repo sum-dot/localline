@@ -1,0 +1,4 @@
+name: LocalLine Dev
+values:
+  - key: baseUrl
+    value: ''

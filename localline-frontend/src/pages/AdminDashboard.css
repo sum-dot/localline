@@ -1,0 +1,46 @@
+.admin-dashboard {
+  max-width: 900px;
+  margin: 2rem auto;
+  padding: 0 1rem;
+}
+
+.admin-error {
+  color: #c0392b;
+  background: #fdecea;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+}
+
+.admin-bus-form {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 2rem;
+}
+
+.admin-bus-form h2 {
+  width: 100%;
+}
+
+.admin-bus-form input {
+  flex: 1 1 200px;
+  padding: 0.5rem;
+}
+
+.admin-form-actions {
+  width: 100%;
+  display: flex;
+  gap: 0.5rem;
+}
+
+.admin-bus-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.admin-bus-table th,
+.admin-bus-table td {
+  border: 1px solid #ddd;
+  padding: 0.5rem;
+  text-align: left;
+}

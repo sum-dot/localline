@@ -1,0 +1,7 @@
+$kind: http-request
+url: "{{baseUrl}}/buses"
+method: POST
+body:
+  type: json
+  content: '{ "name": "Test Bus", "from": "Mirpur", "to": "Motijheel" }'
+order: 4402156792483307
