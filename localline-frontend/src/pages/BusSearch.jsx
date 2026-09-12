@@ -41,7 +41,7 @@ function BusSearch() {
 
       {search !== "" &&
         buses.map((bus) => {
-          if (bus.name.toLowerCase().includes(search.toLowerCase())) {
+          if (bus.name.toLowerCase().startsWith(search.toLowerCase())) {
             found = true;
 
             return <BusSearchResult key={bus._id} bus={bus} />;
