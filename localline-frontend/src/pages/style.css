@@ -70,6 +70,21 @@
     outline: none;
    
 }
+.password-box {
+    position: relative;
+}
+.password-box .input-field {
+    padding-right: 55px;
+}
+.eye-button {
+    width: 24px;
+    height: 24px;
+    position: absolute;
+    right: 20px;
+    top: 30px;
+    transform: translateY(-50%);
+    cursor: pointer;
+}
 ::placeholder{
     font-weight: 500;
     color: #999

@@ -3,9 +3,13 @@ import "./style.css";
 import { Link } from "react-router";
 import { useAuthContext } from "../context/AuthContext";
 
+import eyeOpen from "../assets/eyeopen.png";
+import eyeClose from "../assets/eyeclose.png";
+
 export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");
   const { login } = useAuthContext();
 
@@ -42,15 +46,22 @@ export default function Login() {
             />
           </div>
           <div className="input-box">
-            <input
-              type="password"
-              className="input-field"
-              placeholder="Password"
-              autoComplete="off"
-              required
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-            />
+            <div className="password-box">
+              <input
+                type={showPassword ? "text" : "password"}
+                className="input-field"
+                placeholder="Password"
+                autoComplete="off"
+                required
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+              />
+              <img
+                src={showPassword ? eyeOpen : eyeClose}
+                className="eye-button"
+                onClick={() => setShowPassword(!showPassword)}
+              />
+            </div>
           </div>
           <div className="input-submit">
             <button className="submit-btn" type="submit">

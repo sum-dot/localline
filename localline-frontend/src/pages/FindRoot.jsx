@@ -65,8 +65,8 @@ function FindRoot() {
                     <span onClick={()=>{  setFrom("Mirpur 10");
                             setTo("Motijheel")}}>
                                 Mirpur 10 → Motijheel</span>
-                    <span onClick={()=>{setFrom("Gulistan"); setTo("Abdullah");}}>
-                            Gulistan → Abdullah</span>
+                    <span onClick={()=>{setFrom("Sayedabad"); setTo("Mohakhali");}}>
+                            Sayedabad → Mohakhali</span>
                     <span   onClick={() => {
                             setFrom("Sadarghat");
                             setTo("Mirpur 10");

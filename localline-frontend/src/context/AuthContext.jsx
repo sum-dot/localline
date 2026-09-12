@@ -8,17 +8,22 @@ export function AuthProvider({ children }) {
   const [checkingAuth, setCheckingAuth] = useState(true);
   const navigate = useNavigate();
 
+  const refreshUser = async () => {
+    try {
+      const res = await fetch("http://localhost:4000/auth/me", {
+        credentials: "include",
+      });
+      if (res.ok) {
+        const data = await res.json();
+        setUser(data);
+      }
+    } finally {
+      setCheckingAuth(false);
+    }
+  };
+
   useEffect(() => {
-    fetch("http://localhost:4000/auth/me", {
-      credentials: "include",
-    })
-      .then(async (res) => {
-        if (res.ok) {
-          const data = await res.json();
-          setUser(data);
-        }
-      })
-      .finally(() => setCheckingAuth(false));
+    refreshUser();
   }, []);
 
   const login = async (email, password) => {
@@ -54,7 +59,7 @@ export function AuthProvider({ children }) {
 
   return (
     <AuthContext.Provider
-      value={{ user, isLoggedIn, isAdmin, checkingAuth, login, logout }}
+      value={{ user, isLoggedIn, isAdmin, checkingAuth, login, logout, refreshUser }}
     >
       {children}
     </AuthContext.Provider>

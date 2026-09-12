@@ -176,6 +176,14 @@ footer {
     font-size: 12px;
        padding: 5px;
 }
+.no-results{
+    background: #fff;
+    border-radius: 16px;
+    padding: 25px 20px;
+    text-align: center;
+    font-weight: 400;
+    color: #6b7280;
+}
 
 /* Small phones */
 @media (max-width: 480px) {

@@ -1,7 +1,7 @@
-
 import "../../style4.css";
 import { Link, useNavigate } from "react-router";
 import { useState } from "react";
+import { useAuthContext } from "../context/AuthContext";
 
 import eyeOpen from "../assets/eyeopen.png";
 import eyeClose from "../assets/eyeclose.png";
@@ -9,6 +9,7 @@ import eyeClose from "../assets/eyeclose.png";
 function Registration() {
 
     const navigate = useNavigate();
+    const { refreshUser } = useAuthContext();
 
     const [name, setName] = useState("");
     const [email, setEmail] = useState("");
@@ -84,7 +85,7 @@ function Registration() {
         headers: {
             "Content-Type": "application/json"
         },
-                  
+                    credentials: "include",
                     body: JSON.stringify({
                         name,
                         email,
@@ -103,6 +104,8 @@ function Registration() {
                 setEmail("");
                 setPassword("");
                 setConfirmPassword("");
+
+                await refreshUser();
 
                 navigate("/profile");
 
@@ -266,4 +269,3 @@ function Registration() {
 }
 
 export default Registration;
-

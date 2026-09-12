@@ -13,23 +13,18 @@ const cookieOptions = {
   path: "/",
 };
 
-
 export const register = async (req, res) => {
   try {
     const { name, email, password } = req.body;
 
     if (!name || !email || !password) {
-      return res.status(400).json({
-        error: "All fields are required"
-      });
+      return res.status(400).json({ error: "All fields are required" });
     }
 
     const existingUser = await User.findOne({ email });
 
     if (existingUser) {
-      return res.status(400).json({
-        error: "Email already registered"
-      });
+      return res.status(400).json({ error: "Email already registered" });
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
@@ -42,22 +37,27 @@ export const register = async (req, res) => {
 
     await user.save();
 
+    const token = jwt.sign(
+      { id: user._id, email: user.email, role: user.role },
+      process.env.JWT_SECRET,
+      { expiresIn: lifetime / 1000 },
+    );
+
+    res.cookie("token", token, { ...cookieOptions, maxAge: lifetime });
+
     return res.status(201).json({
       message: "Registration successful",
-      user: {
-        name: user.name,
-        email: user.email
-      }
+      id: user._id,
+      name: user.name,
+      email: user.email,
+      role: user.role,
     });
+    
 
   } catch (err) {
-    res.status(500).json({
-      error: err.message
-    });
+    res.status(500).json({ error: err.message });
   }
 };
-
-
 
 export const login = async (req, res) => {
   try {
