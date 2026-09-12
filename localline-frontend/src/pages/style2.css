@@ -107,17 +107,17 @@ body{
     border-radius: 20px;
     font-size: 13px;
 }
-.tag-time{
+.tag.tag-time{
     background: #ede9fe;
     color: #5b21b6;
     border: 1px solid #c4b5fd;
 }
-.tag-fare{
+.tag.tag-fare{
     background: #ffedd5;
     border: 1px solid #fbbf24;
     color: #9a3412;
 }
-.tag-stops{
+.tag.tag-stops{
     background: #d1fae5;
     border: 1px solid #16a34a;
     color: #334155;
