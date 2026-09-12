@@ -3,7 +3,6 @@ import mongoose from "mongoose";
 const busSchema = new mongoose.Schema({
   name: String,
   nameLocal: String,
-  image: String,
   serviceType: String,
   from: String,
   to: String,

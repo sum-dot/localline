@@ -4,7 +4,6 @@ import "./AdminDashboard.css";
 const emptyForm = {
   name: "",
   nameLocal: "",
-  image: "",
   serviceType: "",
   from: "",
   to: "",
@@ -44,7 +43,6 @@ function AdminDashboard() {
     setForm({
       name: bus.name || "",
       nameLocal: bus.nameLocal || "",
-      image: bus.image || "",
       serviceType: bus.serviceType || "",
       from: bus.from || "",
       to: bus.to || "",
@@ -138,12 +136,6 @@ function AdminDashboard() {
           name="nameLocal"
           placeholder="Local Name"
           value={form.nameLocal}
-          onChange={handleChange}
-        />
-        <input
-          name="image"
-          placeholder="Image URL"
-          value={form.image}
           onChange={handleChange}
         />
         <input
