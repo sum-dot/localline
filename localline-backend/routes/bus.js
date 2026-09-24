@@ -11,8 +11,8 @@ import isAdmin from "../middlewares/isAdmin.js";
 
 const router = express.Router();
 
-router.get("/", getAllBuses);
-router.get("/:id", getBusById);
+router.get("/",checkToken, getAllBuses);
+router.get("/:id",checkToken, getBusById);
 router.post("/", checkToken, isAdmin, createBus);
 router.put("/:id", checkToken, isAdmin, updateBus);
 router.delete("/:id", checkToken, isAdmin, deleteBus);

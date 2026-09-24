@@ -1,18 +1,31 @@
-import { useState, useEffect } from "react";
+
+import { useState } from "react";
 import "./BusSearch.css";
 import BusSearchResult from "./BusSearchResult";
 
 function BusSearch() {
   const [search, setSearch] = useState("");
   const [buses, setBuses] = useState([]);
+  const [searched, setSearched] = useState(false);
 
-  useEffect(() => {
-    fetch("http://localhost:4000/buses")
-      .then((res) => res.json())
-      .then((data) => setBuses(data));
-  }, []);
+  const searchBus = (e) => {
+    if (e.key === "Enter") {
+      if (search.trim() === "") {
+        setBuses([]);
+        setSearched(false);
+        return;
+      }
 
-  let found = false;
+      fetch(
+        `http://localhost:4000/buses?search=${search}&limit=5&offset=0`
+      )
+        .then((res) => res.json())
+        .then((data) => {
+          setBuses(data);
+          setSearched(true);
+        });
+    }
+  };
 
   return (
     <>
@@ -35,28 +48,23 @@ function BusSearch() {
             placeholder="Type bus name - e.g. Hazi Transport"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
+            onKeyDown={searchBus}
           />
         </div>
       </div>
 
-      {search !== "" &&
-        buses.map((bus) => {
-          if (bus.name.toLowerCase().startsWith(search.toLowerCase())) {
-            found = true;
-
-            return <BusSearchResult key={bus._id} bus={bus} />;
-          }
-
-          return null;
-        })}
-
-      {search !== "" && found === false && (
+      {searched && buses.length === 0 && (
         <p style={{ textAlign: "center", marginTop: "20px" }}>
           No bus found
         </p>
       )}
+
+      {buses.map((bus) => (
+        <BusSearchResult key={bus._id} bus={bus} />
+      ))}
     </>
   );
 }
 
 export default BusSearch;
+
