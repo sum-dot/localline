@@ -1,10 +1,12 @@
-import { useState, useEffect } from "react";
+
+import { useState } from "react";
 import "./BusSearch.css";
 import BusSearchResult from "./BusSearchResult";
 
 function BusSearch() {
   const [search, setSearch] = useState("");
   const [buses, setBuses] = useState([]);
+  const [searched, setSearched] = useState(false);
 
   useEffect(() => {
     if (search.trim() === "") {
@@ -48,6 +50,7 @@ function BusSearch() {
             placeholder="Type bus name - e.g. Hazi Transport"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
+            onKeyDown={searchBus}
           />
         </div>
       </div>
@@ -58,6 +61,10 @@ function BusSearch() {
       {search !== "" && buses.length === 0 && (
         <p style={{ textAlign: "center", marginTop: "20px" }}>No bus found</p>
       )}
+
+      {buses.map((bus) => (
+        <BusSearchResult key={bus._id} bus={bus} />
+      ))}
     </>
   );
 }
