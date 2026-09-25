@@ -82,7 +82,15 @@ export default function RouteFinder(props) {
     const [error, setError] = useState("");
 
     useEffect(() => {
-
+        // GET /buses is admin-only now, so this page uses the public
+        // /buses/search endpoint instead, querying by the "from" stop.
+        // It still returns full bus documents, so the existing from/to
+        // stop-order check below still runs on the results.
+        //
+        // /buses/search now returns { results, total } and caps each
+        // request at 10 results, so this page needs every match (the
+        // from/to check below needs the complete set) and keeps asking
+        // for the next page via offset until it has them all.
         async function fetchBuses() {
             setLoading(true);
             setError("");
@@ -92,14 +100,22 @@ export default function RouteFinder(props) {
                 return;
             }
             try {
-                const res = await fetch(
-                    `http://localhost:4000/buses/search?query=${encodeURIComponent(props.from)}`
-                );
-                if (!res.ok) {
-                    throw new Error("Bad response");
+                const collected = [];
+                let offset = 0;
+                let total = Infinity;
+                while (offset < total) {
+                    const res = await fetch(
+                        `http://localhost:4000/buses/search?query=${encodeURIComponent(props.from)}&limit=10&offset=${offset}`
+                    );
+                    if (!res.ok) {
+                        throw new Error("Bad response");
+                    }
+                    const data = await res.json();
+                    collected.push(...data.results);
+                    total = data.total;
+                    offset += data.results.length || 10; // guard against a stuck loop on an empty page
                 }
-                const data = await res.json();
-                setAllBuses(data.results || []);
+                setAllBuses(collected);
             } catch {
                 setError("Failed to load buses");
             } finally {

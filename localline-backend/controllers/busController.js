@@ -62,20 +62,11 @@ export const searchBuses = async (req, res) => {
             ],
           };
 
-    const buses = await Bus.find(filter);
-    const limit = Math.min(parseInt(req.query.limit) || 10, 10);
-    const offset = parseInt(req.query.offset) || 0;
-
-    const regex = new RegExp(query, "i");
-    const filter = {
-      $or: [
-        { name: regex },
-        { nameLocal: regex },
-        { from: regex },
-        { to: regex },
-        { stops: regex },
-      ],
-    };
+    // paginated 5-10 at a time per the teacher's request; reuses the
+    // field-aware filter above (name-only, or the wider name/nameLocal/
+    // from/to/stops match) instead of rebuilding it
+    const limit = Math.min(Math.max(parseInt(req.query.limit) || 10, 1), 10);
+    const offset = Math.max(parseInt(req.query.offset) || 0, 0);
 
     const [results, total] = await Promise.all([
       Bus.find(filter).skip(offset).limit(limit),
