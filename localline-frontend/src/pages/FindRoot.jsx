@@ -1,17 +1,50 @@
 import "../../style4.css";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import RouteFinder from "./RouteFinder";
+import { useAuthContext } from "../context/AuthContext";
+
+const MAX_RECENT = 4;
 
 function FindRoot() {
+    const { isLoggedIn, user } = useAuthContext();
     const [showRouteFinder, setShowRouteFinder] = useState(false);
         const [from, setFrom] = useState("");
         const[to,setTo]=useState("");
+        const [recentSearches, setRecentSearches] = useState([]);
+
+    useEffect(() => {
+        if (!isLoggedIn) {
+            setRecentSearches([]);
+            return;
+        }
+        const stored = localStorage.getItem(`recentSearches_${user.id}`);
+        setRecentSearches(stored ? JSON.parse(stored) : []);
+    }, [isLoggedIn, user]);
+
+    const saveRecentSearch = (searchFrom, searchTo) => {
+        if (!isLoggedIn) {
+            return;
+        }
+        const withoutDupe = recentSearches.filter(
+            (r) => !(r.from === searchFrom && r.to === searchTo)
+        );
+        const updated = [{ from: searchFrom, to: searchTo }, ...withoutDupe].slice(
+            0,
+            MAX_RECENT
+        );
+        setRecentSearches(updated);
+        localStorage.setItem(
+            `recentSearches_${user.id}`,
+            JSON.stringify(updated)
+        );
+    };
 
     const handleFindBus = () => {
             if (!from || !to) {
                 
         return;
     }
+        saveRecentSearch(from, to);
         setShowRouteFinder(true);
     };
 
@@ -73,6 +106,28 @@ function FindRoot() {
                         }}> Sadarghat → Mirpur 10</span>
 
                 </div>
+
+                {isLoggedIn && recentSearches.length > 0 && (
+                    <div className="popularroute">
+
+                        <div className="title">
+                            Recent Searches
+                        </div>
+
+                        {recentSearches.map((r, i) => (
+                            <span
+                                key={i}
+                                onClick={() => {
+                                    setFrom(r.from);
+                                    setTo(r.to);
+                                }}
+                            >
+                                {r.from} → {r.to}
+                            </span>
+                        ))}
+
+                    </div>
+                )}
             </div>
 
            {showRouteFinder && <RouteFinder from={from} to={to} />}
