@@ -7,12 +7,25 @@ function BusSearch() {
   const [buses, setBuses] = useState([]);
 
   useEffect(() => {
-    fetch("http://localhost:4000/buses")
-      .then((res) => res.json())
-      .then((data) => setBuses(data));
-  }, []);
+    if (search.trim() === "") {
+      setBuses([]);
+      return;
+    }
 
-  let found = false;
+    const controller = new AbortController();
+
+    fetch(
+      `http://localhost:4000/buses/search?query=${encodeURIComponent(search)}`,
+      { signal: controller.signal },
+    )
+      .then((res) => res.json())
+      .then((data) => setBuses(data))
+      .catch((err) => {
+        if (err.name !== "AbortError") console.error(err);
+      });
+
+    return () => controller.abort();
+  }, [search]);
 
   return (
     <>
@@ -22,7 +35,7 @@ function BusSearch() {
             style={{
               color: "black",
               marginBottom: "1rem",
-              fontWeight: "bold"
+              fontWeight: "bold",
             }}
           >
             Search a Bus
@@ -40,20 +53,10 @@ function BusSearch() {
       </div>
 
       {search !== "" &&
-        buses.map((bus) => {
-          if (bus.name.toLowerCase().startsWith(search.toLowerCase())) {
-            found = true;
+        buses.map((bus) => <BusSearchResult key={bus._id} bus={bus} />)}
 
-            return <BusSearchResult key={bus._id} bus={bus} />;
-          }
-
-          return null;
-        })}
-
-      {search !== "" && found === false && (
-        <p style={{ textAlign: "center", marginTop: "20px" }}>
-          No bus found
-        </p>
+      {search !== "" && buses.length === 0 && (
+        <p style={{ textAlign: "center", marginTop: "20px" }}>No bus found</p>
       )}
     </>
   );

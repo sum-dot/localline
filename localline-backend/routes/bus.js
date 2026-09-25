@@ -2,6 +2,7 @@ import express from "express";
 import {
   getAllBuses,
   getBusById,
+  searchBuses,
   createBus,
   updateBus,
   deleteBus,
@@ -11,8 +12,9 @@ import isAdmin from "../middlewares/isAdmin.js";
 
 const router = express.Router();
 
-router.get("/", getAllBuses);
-router.get("/:id", getBusById);
+router.get("/search", searchBuses); // public — returns only matches
+router.get("/:id", getBusById); // public — one specific bus
+router.get("/", checkToken, isAdmin, getAllBuses); // admin-only — full dump, for the dashboard table
 router.post("/", checkToken, isAdmin, createBus);
 router.put("/:id", checkToken, isAdmin, updateBus);
 router.delete("/:id", checkToken, isAdmin, deleteBus);

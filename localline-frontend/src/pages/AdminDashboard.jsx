@@ -19,12 +19,22 @@ function AdminDashboard() {
 
   const fetchBuses = async () => {
     setLoading(true);
+    setError("");
     try {
-      const res = await fetch("http://localhost:4000/buses");
+      const res = await fetch("http://localhost:4000/buses", {
+        credentials: "include",
+      });
+
       const data = await res.json();
+
+      if (!res.ok) {
+        throw new Error(data.error || "Failed to load buses");
+      }
+
       setBuses(data);
     } catch (err) {
       setError("Failed to load buses");
+      setBuses([]); // ensure buses stays a valid array even on failure
     } finally {
       setLoading(false);
     }

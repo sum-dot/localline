@@ -19,6 +19,32 @@ export const getBusById = async (req, res) => {
   }
 };
 
+export const searchBuses = async (req, res) => {
+  try {
+    const { query } = req.query;
+
+    if (!query) {
+      return res.status(200).json([]);
+    }
+
+    const regex = new RegExp(query, "i"); // "i" = case-insensitive
+
+    const buses = await Bus.find({
+      $or: [
+        { name: regex },
+        { nameLocal: regex },
+        { from: regex },
+        { to: regex },
+        { stops: regex },
+      ],
+    });
+
+    res.status(200).json(buses);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};
+
 export const createBus = async (req, res) => {
   try {
     const bus = new Bus(req.body);
@@ -51,3 +77,5 @@ export const deleteBus = async (req, res) => {
     res.status(500).json({ error: err.message });
   }
 };
+
+

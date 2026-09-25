@@ -23,9 +23,7 @@ function BusSearchResult({ bus }) {
 
         <div className="stops-row">
           {bus.stops.map((stop) => (
-            <div className="stop">
-              {stop}
-            </div>
+            <div className="stop">{stop}</div>
           ))}
         </div>
       </div>
