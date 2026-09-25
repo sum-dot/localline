@@ -82,10 +82,7 @@ export default function RouteFinder(props) {
     const [error, setError] = useState("");
 
     useEffect(() => {
-        // GET /buses is admin-only now, so this page uses the public
-        // /buses/search endpoint instead, querying by the "from" stop.
-        // It still returns full bus documents, so the existing from/to
-        // stop-order check below still runs on the results.
+
         async function fetchBuses() {
             setLoading(true);
             setError("");

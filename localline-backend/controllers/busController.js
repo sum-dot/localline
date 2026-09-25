@@ -1,4 +1,3 @@
-
 import Bus from "../models/Bus.js";
 
 export const getAllBuses = async (req, res) => {
@@ -35,23 +34,43 @@ export const getBusById = async (req, res) => {
 
 export const searchBuses = async (req, res) => {
   try {
-    const { query } = req.query;
+    const { query, field } = req.query;
 
     if (!query) {
       return res.status(200).json([]);
     }
 
-    const regex = new RegExp(query, "i"); // "i" = case-insensitive
+    // escape regex special characters so a stray ".", "(", etc. in the
+    // typed text doesn't break the pattern or match more than intended
+    const escaped = query.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 
-    const buses = await Bus.find({
-      $or: [
-        { name: regex },
-        { nameLocal: regex },
-        { from: regex },
-        { to: regex },
-        { stops: regex },
-      ],
-    });
+    // BusSearch.jsx passes field=name. It matches "name" only (not
+    // nameLocal) because BusSearchResult.jsx only ever displays bus.name
+    // — matching on nameLocal too could return a bus whose visible name
+    // doesn't contain what was typed at all. Anchored to the start ("^")
+    // so typing "Ha" only returns buses actually named "Ha...", not
+    // every bus with an "ha" anywhere in its name.
+    const nameRegex = new RegExp("^" + escaped, "i");
+
+    // RouteFinder.jsx omits "field" and keeps the old, wider substring
+    // match across name/from/to/stops, since it searches by stop name
+    // which can appear anywhere in that list.
+    const regex = new RegExp(escaped, "i");
+
+    const filter =
+      field === "name"
+        ? { name: nameRegex }
+        : {
+            $or: [
+              { name: regex },
+              { nameLocal: regex },
+              { from: regex },
+              { to: regex },
+              { stops: regex },
+            ],
+          };
+
+    const buses = await Bus.find(filter);
 
     res.status(200).json(buses);
   } catch (err) {
@@ -104,4 +123,3 @@ export const deleteBus = async (req, res) => {
     res.status(500).json({ error: err.message });
   }
 };
-

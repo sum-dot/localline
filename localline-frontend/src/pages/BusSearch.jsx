@@ -3,11 +3,14 @@ import "./BusSearch.css";
 import BusSearchResult from "./BusSearchResult";
 
 function BusSearch() {
+  // "search" is just what's in the input box; "submittedSearch" is what
+  // was actually confirmed with Enter, and is what triggers the fetch
   const [search, setSearch] = useState("");
+  const [submittedSearch, setSubmittedSearch] = useState("");
   const [buses, setBuses] = useState([]);
 
   useEffect(() => {
-    if (search.trim() === "") {
+    if (submittedSearch.trim() === "") {
       setBuses([]);
       return;
     }
@@ -15,7 +18,7 @@ function BusSearch() {
     const controller = new AbortController();
 
     fetch(
-      `http://localhost:4000/buses/search?query=${encodeURIComponent(search)}`,
+      `http://localhost:4000/buses/search?query=${encodeURIComponent(submittedSearch)}&field=name`,
       { signal: controller.signal },
     )
       .then((res) => res.json())
@@ -25,7 +28,13 @@ function BusSearch() {
       });
 
     return () => controller.abort();
-  }, [search]);
+  }, [submittedSearch]);
+
+  function handleKeyDown(e) {
+    if (e.key === "Enter") {
+      setSubmittedSearch(search);
+    }
+  }
 
   return (
     <>
@@ -48,14 +57,15 @@ function BusSearch() {
             placeholder="Type bus name - e.g. Hazi Transport"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
+            onKeyDown={handleKeyDown}
           />
         </div>
       </div>
 
-      {search !== "" &&
+      {submittedSearch !== "" &&
         buses.map((bus) => <BusSearchResult key={bus._id} bus={bus} />)}
 
-      {search !== "" && buses.length === 0 && (
+      {submittedSearch !== "" && buses.length === 0 && (
         <p style={{ textAlign: "center", marginTop: "20px" }}>No bus found</p>
       )}
     </>
