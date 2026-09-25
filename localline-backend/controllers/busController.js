@@ -79,6 +79,36 @@ export const searchBuses = async (req, res) => {
   }
 };
 
+// Any logged-in user can rate a bus; rating again just updates their
+// own entry instead of adding a duplicate.
+export const rateBus = async (req, res) => {
+  try {
+    const stars = parseInt(req.body.stars, 10);
+    if (!Number.isInteger(stars) || stars < 1 || stars > 5) {
+      return res.status(400).json({ error: "stars must be an integer from 1 to 5" });
+    }
+
+    const bus = await Bus.findById(req.params.id);
+    if (!bus) {
+      return res.status(404).json({ error: "Bus not found" });
+    }
+
+    const existing = bus.ratings.find(
+      (r) => r.user.toString() === req.user.id
+    );
+    if (existing) {
+      existing.stars = stars;
+    } else {
+      bus.ratings.push({ user: req.user.id, stars });
+    }
+
+    await bus.save();
+    res.status(200).json(bus);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};
+
 export const createBus = async (req, res) => {
   try {
     const bus = new Bus(req.body);

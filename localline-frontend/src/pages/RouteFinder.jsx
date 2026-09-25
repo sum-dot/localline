@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import "./style2.css";
 import busIcon from "../assets/bus-icon.png";
+import { useAuthContext } from "../context/AuthContext";
 
 // each stop costs 5tk and a stop takes about 3 minutes to reach
 const FARE_PER_STOP = 5;
@@ -66,6 +67,32 @@ function BusCard(props) {
                             <p className="step-desc">Tell conductor "নামবো" as you approach.</p>
                         </div>
                     </div>
+
+                    {props.isLoggedIn && (
+                        <div className="rating-row">
+                            <span className="rating-label">Rate this bus:</span>
+                            <span className="rating-stars">
+                                {[1, 2, 3, 4, 5].map((n) => (
+                                    <span
+                                        key={n}
+                                        className={
+                                            n <= props.userRating
+                                                ? "rating-star rating-star-filled"
+                                                : "rating-star"
+                                        }
+                                        onClick={() => props.onRate(n)}
+                                    >
+                                        ★
+                                    </span>
+                                ))}
+                            </span>
+                            {props.ratingCount > 0 && (
+                                <span className="rating-average">
+                                    {props.avgRating.toFixed(1)} ({props.ratingCount})
+                                </span>
+                            )}
+                        </div>
+                    )}
                 </div>
             )}
         </div>
@@ -73,6 +100,8 @@ function BusCard(props) {
 }
 
 export default function RouteFinder(props) {
+    const { isLoggedIn, user } = useAuthContext();
+
     const state = useState(null);
     const openCard = state[0];
     const setOpenCard = state[1];
@@ -133,6 +162,39 @@ export default function RouteFinder(props) {
         }
     }
 
+    // average of a bus's stars, 0 when nobody has rated it yet
+    function averageRating(ratings) {
+        if (!ratings || ratings.length === 0) {
+            return 0;
+        }
+        const sum = ratings.reduce((total, r) => total + r.stars, 0);
+        return sum / ratings.length;
+    }
+
+    async function handleRate(busId, stars) {
+        if (!isLoggedIn) {
+            return;
+        }
+        try {
+            const res = await fetch(`http://localhost:4000/buses/${busId}/rate`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                credentials: "include",
+                body: JSON.stringify({ stars }),
+            });
+            if (!res.ok) {
+                return;
+            }
+            const updatedBus = await res.json();
+            // swap in the fresh bus so its new average/rating recomputes below
+            setAllBuses((prev) =>
+                prev.map((b) => (b._id === busId ? updatedBus : b))
+            );
+        } catch {
+            // rating is a non-critical enhancement; fail silently
+        }
+    }
+
     // find every bus whose stop list has "from" before "to"
     const matchedBuses = [];
     for (const bus of allBuses) {
@@ -149,14 +211,27 @@ export default function RouteFinder(props) {
         }
         if (fromIndex !== -1 && toIndex !== -1 && fromIndex < toIndex) {
             const stopsCount = toIndex - fromIndex;
+            const ratings = bus.ratings || [];
+            const own = isLoggedIn && user
+                ? ratings.find((r) => r.user === user.id)
+                : null;
             matchedBuses.push({
                 id: bus._id,
                 displayName: bus.nameLocal && bus.nameLocal.trim() !== "" ? bus.nameLocal : bus.name,
                 stopsCount: stopsCount,
                 fare: stopsCount * FARE_PER_STOP,
                 minutes: stopsCount * MINUTES_PER_STOP,
+                avgRating: averageRating(ratings),
+                ratingCount: ratings.length,
+                userRating: own ? own.stars : 0,
             });
         }
+    }
+
+    // logged-in users see the highest-rated bus first; everyone else
+    // keeps the original (unranked) order
+    if (isLoggedIn) {
+        matchedBuses.sort((a, b) => b.avgRating - a.avgRating);
     }
 
     // use the quickest match for the top summary stats
@@ -217,6 +292,11 @@ export default function RouteFinder(props) {
                     getOffAt={props.to}
                     expanded={openCard === bus.id}
                     onToggle={handleToggle}
+                    isLoggedIn={isLoggedIn}
+                    avgRating={bus.avgRating}
+                    ratingCount={bus.ratingCount}
+                    userRating={bus.userRating}
+                    onRate={(stars) => handleRate(bus.id, stars)}
                 />
             ))}
 

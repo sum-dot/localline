@@ -163,6 +163,35 @@ body{
     color: #777;
     margin-top: 4px;
 }
+.rating-row{
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding-top: 8px;
+    border-top: 1px solid #eee;
+}
+.rating-label{
+    font-size: 14px;
+    color: #555;
+    font-weight: 600;
+}
+.rating-stars{
+    display: flex;
+    gap: 2px;
+}
+.rating-star{
+    font-size: 20px;
+    line-height: 1;
+    color: #d1d5db;
+    cursor: pointer;
+}
+.rating-star-filled{
+    color: #facc15;
+}
+.rating-average{
+    font-size: 13px;
+    color: #777;
+}
 footer {
    
 

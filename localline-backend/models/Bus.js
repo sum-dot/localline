@@ -7,6 +7,13 @@ const busSchema = new mongoose.Schema({
   from: String,
   to: String,
   stops: [String],
+  // one rating per user: whoever rates again just updates their own entry
+  ratings: [
+    {
+      user: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
+      stars: { type: Number, min: 1, max: 5 },
+    },
+  ],
 });
 
 export default mongoose.model("Bus", busSchema);
