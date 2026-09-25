@@ -1,43 +1,17 @@
 import "../../style4.css";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import RouteFinder from "./RouteFinder";
-import { useAuthContext } from "../context/AuthContext"; // Adjust path if needed
 
 function FindRoot() {
     const [showRouteFinder, setShowRouteFinder] = useState(false);
-    const [from, setFrom] = useState("");
-    const [to, setTo] = useState("");
-    const [recentSearches, setRecentSearches] = useState([]);
-
-    const { authUser } = useAuthContext(); // Get login context/user info
-
-    // Load saved recent searches from localStorage when component mounts or user state changes
-    useEffect(() => {
-        if (authUser) {
-            const savedSearches = JSON.parse(localStorage.getItem("recentSearches")) || [];
-            setRecentSearches(savedSearches);
-        }
-    }, [authUser]);
+        const [from, setFrom] = useState("");
+        const[to,setTo]=useState("");
 
     const handleFindBus = () => {
-        if (!from || !to) {
-            return;
-        }
-
-        // Save recent search if user is logged in
-        if (authUser) {
-            const newSearch = { from, to };
-            
-            // Avoid duplicate consecutive searches and limit list length (e.g., max 5)
-            const filteredSearches = recentSearches.filter(
-                (item) => !(item.from.toLowerCase() === from.toLowerCase() && item.to.toLowerCase() === to.toLowerCase())
-            );
-
-            const updatedSearches = [newSearch, ...filteredSearches].slice(0, 5);
-            setRecentSearches(updatedSearches);
-            localStorage.setItem("recentSearches", JSON.stringify(updatedSearches));
-        }
-
+            if (!from || !to) {
+                
+        return;
+    }
         setShowRouteFinder(true);
     };
 
@@ -56,15 +30,15 @@ function FindRoot() {
                         className="inputspace"
                         placeholder="🟢From: Enter your source"
                         value={from}
-                        onChange={(e) => setFrom(e.target.value)}
+                         onChange={(e) => setFrom(e.target.value)}
                     />
 
                     <input
                         type="text"
                         className="inputspace"
                         placeholder="🔴To: Enter your Destination"
-                        value={to}
-                        onChange={(e) => setTo(e.target.value)}
+                         value={to}
+                         onChange={(e) => setTo(e.target.value)}
                     />
 
                 </div>
@@ -88,43 +62,17 @@ function FindRoot() {
                             setTo("Farmgate");
                         }}>
                         Mirpur 10 → Farmgate</span>
-                    <span onClick={() => {  
-                            setFrom("Mirpur 10");
-                            setTo("Motijheel");
-                        }}>
-                        Mirpur 10 → Motijheel</span>
-                    <span onClick={() => {
-                            setFrom("Sayedabad"); 
-                            setTo("Mohakhali");
-                        }}>
-                        Sayedabad → Mohakhali</span>
-                    <span onClick={() => {
+                    <span onClick={()=>{  setFrom("Mirpur 10");
+                            setTo("Motijheel")}}>
+                                Mirpur 10 → Motijheel</span>
+                    <span onClick={()=>{setFrom("Sayedabad"); setTo("Mohakhali");}}>
+                            Sayedabad → Mohakhali</span>
+                    <span   onClick={() => {
                             setFrom("Sadarghat");
                             setTo("Mirpur 10");
-                        }}> 
-                        Sadarghat → Mirpur 10</span>
+                        }}> Sadarghat → Mirpur 10</span>
 
                 </div>
-
-                {/* Show Recent Searches only when user is logged in and has past searches */}
-                {authUser && recentSearches.length > 0 && (
-                    <div className="popularroute" style={{ marginTop: "15px" }}>
-                        <div className="title">
-                            Recent Searches
-                        </div>
-                        {recentSearches.map((route, index) => (
-                            <span 
-                                key={index} 
-                                onClick={() => {
-                                    setFrom(route.from);
-                                    setTo(route.to);
-                                }}
-                            >
-                                {route.from} → {route.to}
-                            </span>
-                        ))}
-                    </div>
-                )}
             </div>
 
            {showRouteFinder && <RouteFinder from={from} to={to} />}
