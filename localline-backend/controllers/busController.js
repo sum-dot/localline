@@ -52,9 +52,11 @@ export const searchBuses = async (req, res) => {
       return res.status(200).json([]);
     }
 
-    const escaped = query.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+    const escaped = query
+      .trim()
+      .replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 
-    const regex = new RegExp(escaped, "i");
+    const regex = new RegExp("^" + escaped, "i");
 
     const filter =
       field === "name"
@@ -69,14 +71,13 @@ export const searchBuses = async (req, res) => {
             ],
           };
 
-    const buses = await Bus.find(filter);
+    const buses = await Bus.find(filter).limit(5);
 
     res.status(200).json(buses);
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
 };
-
 export const createBus = async (req, res) => {
   try {
     const bus = new Bus(req.body);
