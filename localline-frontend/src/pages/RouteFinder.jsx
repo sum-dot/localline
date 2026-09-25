@@ -313,6 +313,10 @@ export default function RouteFinder(props) {
         }
     }
 
+    if (isLoggedIn) {
+        matchedBuses.sort((a, b) => b.avgRating - a.avgRating);
+    }
+
     let summaryFare = "--";
     let summaryStops = "--";
     let summaryMinutes = "--";

@@ -1,4 +1,3 @@
-
 import express from "express";
 
 import {
@@ -9,6 +8,7 @@ import {
   createBus,
   updateBus,
   deleteBus,
+  rateBus,
 } from "../controllers/busController.js";
 
 import checkToken from "../middlewares/checkToken.js";
@@ -19,6 +19,7 @@ const router = express.Router();
 router.get("/search", searchBuses);
 router.get("/list", getBusList);
 router.get("/:id", getBusById);
+router.post("/:id/rate", checkToken, rateBus);
 
 router.get("/", checkToken, isAdmin, getAllBuses);
 router.post("/", checkToken, isAdmin, createBus);

@@ -1,4 +1,3 @@
-
 import Bus from "../models/Bus.js";
 
 export const getAllBuses = async (req, res) => {
@@ -120,6 +119,45 @@ export const deleteBus = async (req, res) => {
     }
 
     res.status(200).json({ message: "Bus deleted" });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};
+
+export const rateBus = async (req, res) => {
+  try {
+    const { stars } = req.body;
+    const userId = req.user && (req.user.id || req.user._id);
+
+    if (!userId) {
+      return res.status(401).json({ error: "Login required to rate" });
+    }
+
+    const starsNum = Number(stars);
+
+    if (!Number.isInteger(starsNum) || starsNum < 1 || starsNum > 5) {
+      return res.status(400).json({ error: "Stars must be an integer 1-5" });
+    }
+
+    const bus = await Bus.findById(req.params.id);
+
+    if (!bus) {
+      return res.status(404).json({ error: "Bus not found" });
+    }
+
+    const existing = bus.ratings.find(
+      (r) => r.user.toString() === userId.toString()
+    );
+
+    if (existing) {
+      existing.stars = starsNum;
+    } else {
+      bus.ratings.push({ user: userId, stars: starsNum });
+    }
+
+    await bus.save();
+
+    res.status(200).json(bus);
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
