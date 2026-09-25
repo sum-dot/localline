@@ -8,10 +8,12 @@ function BusSearch() {
   const [search, setSearch] = useState("");
   const [submittedSearch, setSubmittedSearch] = useState("");
   const [buses, setBuses] = useState([]);
+  const [total, setTotal] = useState(0);
 
   useEffect(() => {
     if (submittedSearch.trim() === "") {
       setBuses([]);
+      setTotal(0);
       return;
     }
 
@@ -22,7 +24,10 @@ function BusSearch() {
       { signal: controller.signal },
     )
       .then((res) => res.json())
-      .then((data) => setBuses(data))
+      .then((data) => {
+        setBuses(data.results || []);
+        setTotal(data.total || 0);
+      })
       .catch((err) => {
         if (err.name !== "AbortError") console.error(err);
       });
@@ -41,17 +46,11 @@ function BusSearch() {
       <div className="bus-search-box">
         <div className="search-box">
           <h2
-            style={{
-              color: "black",
-              marginBottom: "1rem",
-              fontWeight: "bold",
-            }}
+            style={{ color: "black", marginBottom: "1rem", fontWeight: "bold" }}
           >
             Search a Bus
           </h2>
-
           <p>Find a bus by name and see its full route</p>
-
           <input
             type="text"
             placeholder="Type bus name - e.g. Hazi Transport"
@@ -62,7 +61,17 @@ function BusSearch() {
         </div>
       </div>
 
+<<<<<<< HEAD
       {submittedSearch !== "" &&
+=======
+      {search !== "" && total > buses.length && (
+        <p style={{ textAlign: "center", color: "#666" }}>
+          Showing {buses.length} of {total} matches — try a more specific search
+        </p>
+      )}
+
+      {search !== "" &&
+>>>>>>> 24d79572a96924618ef14341132095ca42def67e
         buses.map((bus) => <BusSearchResult key={bus._id} bus={bus} />)}
 
       {submittedSearch !== "" && buses.length === 0 && (
