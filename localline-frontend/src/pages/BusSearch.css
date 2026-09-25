@@ -119,3 +119,32 @@
     gap: 1.5rem;
   }
 }
+
+
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  margin: 30px 0;
+}
+
+.pagination button {
+  padding: 8px 13px;
+  border: 1px solid #059033;
+  background-color: white;
+  color: #059033;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.pagination button:hover {
+  background-color: #059033;
+  color: white;
+}
+
+.pagination button.active {
+  background-color: #059033;
+  color: white;
+}
+
