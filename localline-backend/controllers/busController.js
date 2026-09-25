@@ -32,7 +32,6 @@ export const searchBuses = async (req, res) => {
       return res.status(200).json({ results: [], total: 0 });
     }
 
-<<<<<<< HEAD
     // escape regex special characters so a stray ".", "(", etc. in the
     // typed text doesn't break the pattern or match more than intended
     const escaped = query.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
@@ -64,7 +63,6 @@ export const searchBuses = async (req, res) => {
           };
 
     const buses = await Bus.find(filter);
-=======
     const limit = Math.min(parseInt(req.query.limit) || 10, 10);
     const offset = parseInt(req.query.offset) || 0;
 
@@ -78,7 +76,6 @@ export const searchBuses = async (req, res) => {
         { stops: regex },
       ],
     };
->>>>>>> 24d79572a96924618ef14341132095ca42def67e
 
     const [results, total] = await Promise.all([
       Bus.find(filter).skip(offset).limit(limit),
@@ -126,8 +123,4 @@ export const deleteBus = async (req, res) => {
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
-<<<<<<< HEAD
 };
-=======
-};
->>>>>>> 24d79572a96924618ef14341132095ca42def67e
