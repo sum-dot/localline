@@ -37,17 +37,21 @@ function BusCard(props) {
             </div>
 
             <div className="tags">
-                <span className="tag tag-stops">{props.stops} stops</span>
+                <span className="tag tag-stops">
+                    {props.stops} stops
+                </span>
             </div>
 
             {isThisCardOpen === true && (
                 <div className="steps">
                     <div className="step">
                         <div className="step-number active">1</div>
+
                         <div className="step-content">
                             <p className="step-title">
                                 Go to <strong>{props.goTo}</strong>
                             </p>
+
                             <p className="step-desc">
                                 Stand on the correct side of the road.
                             </p>
@@ -56,10 +60,12 @@ function BusCard(props) {
 
                     <div className="step">
                         <div className="step-number active">2</div>
+
                         <div className="step-content">
                             <p className="step-title">
                                 Board <strong>{props.name}</strong>
                             </p>
+
                             <p className="step-desc">
                                 Ask: "{props.getOffAt} যাবে?"
                             </p>
@@ -68,10 +74,13 @@ function BusCard(props) {
 
                     <div className="step">
                         <div className="step-number blue">3</div>
+
                         <div className="step-content">
                             <p className="step-title">
-                                Ride <strong>{props.stops} stops</strong> (~{props.time})
+                                Ride <strong>{props.stops} stops</strong>{" "}
+                                (~{props.time})
                             </p>
+
                             <p className="step-desc">
                                 Pay {props.fare} to conductor.
                             </p>
@@ -80,10 +89,12 @@ function BusCard(props) {
 
                     <div className="step">
                         <div className="step-number gray">4</div>
+
                         <div className="step-content">
                             <p className="step-title">
                                 Get off at <strong>{props.getOffAt}</strong>
                             </p>
+
                             <p className="step-desc">
                                 Tell conductor "নামবো" as you approach.
                             </p>
@@ -92,7 +103,10 @@ function BusCard(props) {
 
                     {props.isLoggedIn && (
                         <div className="rating-row">
-                            <span className="rating-label">Rate this bus:</span>
+                            <span className="rating-label">
+                                Rate this bus:
+                            </span>
+
                             <span className="rating-stars">
                                 {[1, 2, 3, 4, 5].map((n) => (
                                     <span
@@ -102,15 +116,19 @@ function BusCard(props) {
                                                 ? "rating-star rating-star-filled"
                                                 : "rating-star"
                                         }
-                                        onClick={() => props.onRate(n)}
+                                        onClick={() =>
+                                            props.onRate(n)
+                                        }
                                     >
                                         ★
                                     </span>
                                 ))}
                             </span>
+
                             {props.ratingCount > 0 && (
                                 <span className="rating-average">
-                                    {props.avgRating.toFixed(1)} ({props.ratingCount})
+                                    {props.avgRating.toFixed(1)} (
+                                    {props.ratingCount})
                                 </span>
                             )}
                         </div>
@@ -122,6 +140,8 @@ function BusCard(props) {
 }
 
 export default function RouteFinder(props) {
+    const { isLoggedIn, user } = useAuthContext();
+
     const [openCard, setOpenCard] = useState(null);
     const [allBuses, setAllBuses] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -180,12 +200,16 @@ export default function RouteFinder(props) {
         }
     }
 
-    // average of a bus's stars, 0 when nobody has rated it yet
     function averageRating(ratings) {
         if (!ratings || ratings.length === 0) {
             return 0;
         }
-        const sum = ratings.reduce((total, r) => total + r.stars, 0);
+
+        const sum = ratings.reduce(
+            (total, r) => total + r.stars,
+            0
+        );
+
         return sum / ratings.length;
     }
 
@@ -193,27 +217,38 @@ export default function RouteFinder(props) {
         if (!isLoggedIn) {
             return;
         }
+
         try {
-            const res = await fetch(`http://localhost:4000/buses/${busId}/rate`, {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                credentials: "include",
-                body: JSON.stringify({ stars }),
-            });
+            const res = await fetch(
+                `http://localhost:4000/buses/${busId}/rate`,
+                {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    credentials: "include",
+                    body: JSON.stringify({
+                        stars: stars,
+                    }),
+                }
+            );
+
             if (!res.ok) {
                 return;
             }
+
             const updatedBus = await res.json();
-            // swap in the fresh bus so its new average/rating recomputes below
+
             setAllBuses((prev) =>
-                prev.map((b) => (b._id === busId ? updatedBus : b))
+                prev.map((b) =>
+                    b._id === busId ? updatedBus : b
+                )
             );
-        } catch {
-            // rating is a non-critical enhancement; fail silently
+        } catch (err) {
+            console.error(err);
         }
     }
 
-    // find every bus whose stop list has "from" before "to"
     const matchedBuses = [];
 
     for (const bus of allBuses) {
@@ -244,34 +279,40 @@ export default function RouteFinder(props) {
             fromIndex < toIndex
         ) {
             const stopsCount = toIndex - fromIndex;
+
             const ratings = bus.ratings || [];
-            const own = isLoggedIn && user
-                ? ratings.find((r) => r.user === user.id)
-                : null;
+
+            const own =
+                isLoggedIn && user
+                    ? ratings.find(
+                          (r) => r.user === user.id
+                      )
+                    : null;
+
             matchedBuses.push({
                 id: bus._id,
+
                 displayName:
                     bus.nameLocal &&
                     bus.nameLocal.trim() !== ""
                         ? bus.nameLocal
                         : bus.name,
+
                 stopsCount: stopsCount,
+
                 fare: stopsCount * FARE_PER_STOP,
+
                 minutes: stopsCount * MINUTES_PER_STOP,
+
                 avgRating: averageRating(ratings),
+
                 ratingCount: ratings.length,
+
                 userRating: own ? own.stars : 0,
             });
         }
     }
 
-    // logged-in users see the highest-rated bus first; everyone else
-    // keeps the original (unranked) order
-    if (isLoggedIn) {
-        matchedBuses.sort((a, b) => b.avgRating - a.avgRating);
-    }
-
-    // use the quickest match for the top summary stats
     let summaryFare = "--";
     let summaryStops = "--";
     let summaryMinutes = "--";
@@ -306,18 +347,33 @@ export default function RouteFinder(props) {
 
             <div className="stats-bar">
                 <div className="stat">
-                    <div className="stat-value">{summaryFare}</div>
-                    <div className="stat-label">EST. FARE</div>
+                    <div className="stat-value">
+                        {summaryFare}
+                    </div>
+
+                    <div className="stat-label">
+                        EST. FARE
+                    </div>
                 </div>
 
                 <div className="stat">
-                    <div className="stat-value">{summaryStops}</div>
-                    <div className="stat-label">STOPS</div>
+                    <div className="stat-value">
+                        {summaryStops}
+                    </div>
+
+                    <div className="stat-label">
+                        STOPS
+                    </div>
                 </div>
 
                 <div className="stat">
-                    <div className="stat-value">{summaryMinutes}</div>
-                    <div className="stat-label">EST. MIN</div>
+                    <div className="stat-value">
+                        {summaryMinutes}
+                    </div>
+
+                    <div className="stat-label">
+                        EST. MIN
+                    </div>
                 </div>
             </div>
 
@@ -341,7 +397,9 @@ export default function RouteFinder(props) {
                 !error &&
                 matchedBuses.length === 0 && (
                     <div className="no-results">
-                        <p>No direct bus found for this route.</p>
+                        <p>
+                            No direct bus found for this route.
+                        </p>
                     </div>
                 )}
 
@@ -357,11 +415,15 @@ export default function RouteFinder(props) {
                     getOffAt={props.to}
                     expanded={openCard === bus.id}
                     onToggle={handleToggle}
+
                     isLoggedIn={isLoggedIn}
                     avgRating={bus.avgRating}
                     ratingCount={bus.ratingCount}
                     userRating={bus.userRating}
-                    onRate={(stars) => handleRate(bus.id, stars)}
+
+                    onRate={(stars) =>
+                        handleRate(bus.id, stars)
+                    }
                 />
             ))}
 
