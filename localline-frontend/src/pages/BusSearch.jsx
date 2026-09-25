@@ -1,40 +1,67 @@
+
 import { useState, useEffect } from "react";
 import "./BusSearch.css";
 import BusSearchResult from "./BusSearchResult";
 
 function BusSearch() {
-  // "search" is just what's in the input box; "submittedSearch" is what
-  // was actually confirmed with Enter, and is what triggers the fetch
   const [search, setSearch] = useState("");
   const [submittedSearch, setSubmittedSearch] = useState("");
   const [buses, setBuses] = useState([]);
+  const [page, setPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
 
   useEffect(() => {
-    if (submittedSearch.trim() === "") {
-      setBuses([]);
-      return;
-    }
-
     const controller = new AbortController();
 
-    fetch(
-      `http://localhost:4000/buses/search?query=${encodeURIComponent(submittedSearch)}&field=name`,
-      { signal: controller.signal },
-    )
+    let url;
+
+    if (submittedSearch === "") {
+      url = `http://localhost:4000/buses/list?page=${page}`;
+    } else {
+      url = `http://localhost:4000/buses/search?query=${encodeURIComponent(
+        submittedSearch
+      )}&field=name`;
+    }
+
+    fetch(url, {
+      signal: controller.signal,
+    })
       .then((res) => res.json())
-      // /buses/search now returns { results, total } instead of a plain
-      // array, since results are paginated 10 at a time
-      .then((data) => setBuses(data.results))
+      .then((data) => {
+        if (submittedSearch === "") {
+          setBuses(data.results || []);
+
+          const pages = Math.ceil((data.total || 0) / 10);
+          setTotalPages(pages || 1);
+        } else {
+          setBuses(Array.isArray(data) ? data : []);
+          setTotalPages(1);
+        }
+      })
       .catch((err) => {
-        if (err.name !== "AbortError") console.error(err);
+        if (err.name !== "AbortError") {
+          console.error(err);
+        }
       });
 
     return () => controller.abort();
-  }, [submittedSearch]);
+  }, [submittedSearch, page]);
+
+  function handleSearchChange(e) {
+    const value = e.target.value;
+
+    setSearch(value);
+
+    if (value.trim() === "") {
+      setPage(1);
+      setSubmittedSearch("");
+    }
+  }
 
   function handleKeyDown(e) {
     if (e.key === "Enter") {
-      setSubmittedSearch(search);
+      setPage(1);
+      setSubmittedSearch(search.trim());
     }
   }
 
@@ -58,20 +85,49 @@ function BusSearch() {
             type="text"
             placeholder="Type bus name - e.g. Hazi Transport"
             value={search}
-            onChange={(e) => setSearch(e.target.value)}
+            onChange={handleSearchChange}
             onKeyDown={handleKeyDown}
           />
         </div>
       </div>
 
-      {submittedSearch !== "" &&
-        buses.map((bus) => <BusSearchResult key={bus._id} bus={bus} />)}
+      {buses.map((bus) => (
+        <BusSearchResult
+          key={bus._id}
+          bus={bus}
+        />
+      ))}
 
       {submittedSearch !== "" && buses.length === 0 && (
-        <p style={{ textAlign: "center", marginTop: "20px" }}>No bus found</p>
+        <p
+          style={{
+            textAlign: "center",
+            marginTop: "20px",
+          }}
+        >
+          No bus found
+        </p>
+      )}
+
+      {submittedSearch === "" && totalPages > 1 && (
+        <div className="pagination">
+          {Array.from(
+            { length: totalPages },
+            (_, index) => index + 1
+          ).map((pageNumber) => (
+            <button
+              key={pageNumber}
+              className={page === pageNumber ? "active" : ""}
+              onClick={() => setPage(pageNumber)}
+            >
+              {pageNumber}
+            </button>
+          ))}
+        </div>
       )}
     </>
   );
 }
 
 export default BusSearch;
+
