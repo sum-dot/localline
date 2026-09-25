@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import "./AdminDashboard.css";
 
 const emptyForm = {
@@ -7,7 +7,7 @@ const emptyForm = {
   serviceType: "",
   from: "",
   to: "",
-  stops: "", // comma-separated text in the form; converted to an array before sending
+  stops: "",
 };
 
 function AdminDashboard() {
@@ -16,6 +16,7 @@ function AdminDashboard() {
   const [error, setError] = useState("");
   const [form, setForm] = useState(emptyForm);
   const [editingId, setEditingId] = useState(null);
+  const [search, setSearch] = useState("");
 
   const fetchBuses = async () => {
     setLoading(true);
@@ -24,17 +25,12 @@ function AdminDashboard() {
       const res = await fetch("http://localhost:4000/buses", {
         credentials: "include",
       });
-
       const data = await res.json();
-
-      if (!res.ok) {
-        throw new Error(data.error || "Failed to load buses");
-      }
-
+      if (!res.ok) throw new Error(data.error || "Failed to load buses");
       setBuses(data);
     } catch (err) {
       setError("Failed to load buses");
-      setBuses([]); // ensure buses stays a valid array even on failure
+      setBuses([]);
     } finally {
       setLoading(false);
     }
@@ -43,6 +39,19 @@ function AdminDashboard() {
   useEffect(() => {
     fetchBuses();
   }, []);
+
+  // Recomputed only when `buses` or `search` actually change, not on
+  // every render — cheap here since we're filtering an in-memory array
+  // the admin already legitimately has, not making a network call.
+  const filteredBuses = useMemo(() => {
+    const q = search.trim().toLowerCase();
+    if (!q) return buses;
+    return buses.filter((bus) =>
+      [bus.name, bus.nameLocal, bus.from, bus.to, bus.serviceType]
+        .filter(Boolean)
+        .some((field) => field.toLowerCase().includes(q)),
+    );
+  }, [buses, search]);
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -58,6 +67,7 @@ function AdminDashboard() {
       to: bus.to || "",
       stops: (bus.stops || []).join(", "),
     });
+    window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
   const handleCancelEdit = () => {
@@ -92,10 +102,7 @@ function AdminDashboard() {
       });
 
       const data = await res.json();
-
-      if (!res.ok) {
-        throw new Error(data.error || "Something went wrong");
-      }
+      if (!res.ok) throw new Error(data.error || "Something went wrong");
 
       setForm(emptyForm);
       setEditingId(null);
@@ -132,90 +139,129 @@ function AdminDashboard() {
 
       {error && <p className="admin-error">{error}</p>}
 
-      <form className="admin-bus-form" onSubmit={handleSubmit}>
+      <section className="admin-card">
         <h2>{editingId ? "Edit Bus" : "Add New Bus"}</h2>
 
-        <input
-          name="name"
-          placeholder="Name"
-          value={form.name}
-          onChange={handleChange}
-          required
-        />
-        <input
-          name="nameLocal"
-          placeholder="Local Name"
-          value={form.nameLocal}
-          onChange={handleChange}
-        />
-        <input
-          name="serviceType"
-          placeholder="Service Type"
-          value={form.serviceType}
-          onChange={handleChange}
-        />
-        <input
-          name="from"
-          placeholder="From"
-          value={form.from}
-          onChange={handleChange}
-        />
-        <input
-          name="to"
-          placeholder="To"
-          value={form.to}
-          onChange={handleChange}
-        />
-        <input
-          name="stops"
-          placeholder="Stops (comma-separated)"
-          value={form.stops}
-          onChange={handleChange}
-        />
+        <form className="admin-bus-form" onSubmit={handleSubmit}>
+          <input
+            name="name"
+            placeholder="Name"
+            value={form.name}
+            onChange={handleChange}
+            required
+          />
+          <input
+            name="nameLocal"
+            placeholder="Local Name"
+            value={form.nameLocal}
+            onChange={handleChange}
+          />
+          <input
+            name="serviceType"
+            placeholder="Service Type"
+            value={form.serviceType}
+            onChange={handleChange}
+          />
+          <input
+            name="from"
+            placeholder="From"
+            value={form.from}
+            onChange={handleChange}
+          />
+          <input
+            name="to"
+            placeholder="To"
+            value={form.to}
+            onChange={handleChange}
+          />
+          <input
+            name="stops"
+            placeholder="Stops (comma-separated)"
+            value={form.stops}
+            onChange={handleChange}
+          />
 
-        <div className="admin-form-actions">
-          <button type="submit">
-            {editingId ? "Save Changes" : "Add Bus"}
-          </button>
-          {editingId && (
-            <button type="button" onClick={handleCancelEdit}>
-              Cancel
+          <div className="admin-form-actions">
+            <button type="submit" className="btn-primary">
+              {editingId ? "Save Changes" : "Add Bus"}
             </button>
-          )}
+            {editingId && (
+              <button
+                type="button"
+                className="btn-secondary"
+                onClick={handleCancelEdit}
+              >
+                Cancel
+              </button>
+            )}
+          </div>
+        </form>
+      </section>
+
+      <section className="admin-card">
+        <div className="admin-list-header">
+          <h2>
+            All Buses ({filteredBuses.length}
+            {search && ` of ${buses.length}`})
+          </h2>
+          <input
+            type="text"
+            className="admin-search-input"
+            placeholder="🔍 Search by name, route, or service type..."
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+          />
         </div>
-      </form>
 
-      <h2>All Buses ({buses.length})</h2>
-
-      {loading ? (
-        <p>Loading buses...</p>
-      ) : (
-        <table className="admin-bus-table">
-          <thead>
-            <tr>
-              <th>Name</th>
-              <th>From</th>
-              <th>To</th>
-              <th>Service Type</th>
-              <th>Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {buses.map((bus) => (
-              <tr key={bus._id}>
-                <td>{bus.name}</td>
-                <td>{bus.from}</td>
-                <td>{bus.to}</td>
-                <td>{bus.serviceType}</td>
-                <td>
-                  <button onClick={() => handleEditClick(bus)}>Edit</button>
-                  <button onClick={() => handleDelete(bus._id)}>Delete</button>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      )}
+        {loading ? (
+          <p className="admin-status">Loading buses...</p>
+        ) : filteredBuses.length === 0 ? (
+          <p className="admin-status">
+            {search ? "No buses match your search." : "No buses yet."}
+          </p>
+        ) : (
+          <div className="admin-table-wrapper">
+            <table className="admin-bus-table">
+              <thead>
+                <tr>
+                  <th>Name</th>
+                  <th>From</th>
+                  <th>To</th>
+                  <th>Service Type</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                {filteredBuses.map((bus) => (
+                  <tr
+                    key={bus._id}
+                    className={editingId === bus._id ? "editing-row" : ""}
+                  >
+                    <td>{bus.name}</td>
+                    <td>{bus.from}</td>
+                    <td>{bus.to}</td>
+                    <td>{bus.serviceType}</td>
+                    <td className="admin-actions-cell">
+                      <button
+                        className="btn-edit"
+                        onClick={() => handleEditClick(bus)}
+                      >
+                        Edit
+                      </button>
+                      <button
+                        className="btn-delete"
+                        onClick={() => handleDelete(bus._id)}
+                      >
+                        Delete
+                      </button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
+      </section>
     </div>
   );
 }

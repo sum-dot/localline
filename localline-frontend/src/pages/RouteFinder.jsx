@@ -102,7 +102,7 @@ export default function RouteFinder(props) {
                     throw new Error("Bad response");
                 }
                 const data = await res.json();
-                setAllBuses(data);
+                setAllBuses(data.results || []);
             } catch {
                 setError("Failed to load buses");
             } finally {
