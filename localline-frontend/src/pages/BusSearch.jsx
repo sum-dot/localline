@@ -92,10 +92,7 @@ function BusSearch() {
             onKeyDown={handleKeyDown}
           />
 
-          <button
-            className="search-button"
-            onClick={handleSearch}
-          >
+          <button className="search-button" onClick={handleSearch}>
             Search
           </button>
         </div>
