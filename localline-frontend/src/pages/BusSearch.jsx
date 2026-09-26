@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import "./BusSearch.css";
 import BusSearchResult from "./BusSearchResult";
@@ -18,7 +19,7 @@ function BusSearch() {
       url = `http://localhost:4000/buses/list?page=${page}`;
     } else {
       url = `http://localhost:4000/buses/search?query=${encodeURIComponent(
-        submittedSearch,
+        submittedSearch
       )}&field=name`;
     }
 
@@ -117,7 +118,7 @@ function BusSearch() {
               >
                 {pageNumber}
               </button>
-            ),
+            )
           )}
         </div>
       )}
@@ -126,3 +127,4 @@ function BusSearch() {
 }
 
 export default BusSearch;
+
