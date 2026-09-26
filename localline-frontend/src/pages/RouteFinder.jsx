@@ -28,9 +28,25 @@ function BusCard(props) {
       <div className="bus-card-header" onClick={handleHeaderClick}>
         <img src={busIcon} alt="" className="bus-icon" />
         <h2>{props.name}</h2>
+
+        {props.isLoggedIn && (
+          <span
+            className={
+              props.isFavorited
+                ? "favorite-heart favorite-heart-active"
+                : "favorite-heart"
+            }
+            onClick={(e) => {
+              e.stopPropagation();
+              props.onToggleFavorite();
+            }}
+          >
+            ♥
+          </span>
+        )}
+
         <span className="dropdown-arrow">{arrowSymbol}</span>
       </div>
-
       <div className="tags">
         <span className="tag tag-time">{props.time}</span>
         <span className="tag tag-fare">{props.fare}</span>
@@ -129,6 +145,7 @@ function BusCard(props) {
 
 export default function RouteFinder(props) {
   const { isLoggedIn, user } = useAuthContext();
+  const [favoriteIds, setFavoriteIds] = useState(new Set());
 
   const [openCard, setOpenCard] = useState(null);
   const [allBuses, setAllBuses] = useState([]);
@@ -180,6 +197,10 @@ export default function RouteFinder(props) {
     fetchBuses();
   }, [props.from]);
 
+  useEffect(() => {
+    setFavoriteIds(new Set((user?.favorites || []).map((id) => id.toString())));
+  }, [user]);
+
   function handleToggle(clickedId) {
     if (openCard === clickedId) {
       setOpenCard(null);
@@ -224,6 +245,23 @@ export default function RouteFinder(props) {
       setAllBuses((prev) =>
         prev.map((b) => (b._id === busId ? updatedBus : b)),
       );
+    } catch (err) {
+      console.error(err);
+    }
+  }
+
+  async function handleToggleFavorite(busId) {
+    if (!isLoggedIn) return;
+
+    try {
+      const res = await fetch(
+        `http://localhost:4000/users/me/favorites/${busId}`,
+        { method: "POST", credentials: "include" },
+      );
+      if (!res.ok) return;
+
+      const data = await res.json();
+      setFavoriteIds(new Set(data.favorites.map((id) => id.toString())));
     } catch (err) {
       console.error(err);
     }
@@ -274,6 +312,8 @@ export default function RouteFinder(props) {
         ratingCount: ratings.length,
 
         userRating: own ? own.stars : 0,
+
+        isFavorited: favoriteIds.has(bus._id.toString()),
       });
     }
   }
@@ -361,6 +401,8 @@ export default function RouteFinder(props) {
           ratingCount={bus.ratingCount}
           userRating={bus.userRating}
           onRate={(stars) => handleRate(bus.id, stars)}
+          isFavorited={bus.isFavorited}
+          onToggleFavorite={() => handleToggleFavorite(bus.id)}
         />
       ))}
 

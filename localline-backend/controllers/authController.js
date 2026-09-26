@@ -78,7 +78,13 @@ export const login = async (req, res) => {
 
     return res
       .status(200)
-      .json({ id: user._id, name: user.name, email: user.email, role: user.role });
+      .json({
+        id: user._id,
+        name: user.name,
+        email: user.email,
+        role: user.role,
+        favorites: user.favorites,
+      });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
@@ -95,7 +101,13 @@ export const getMe = async (req, res) => {
     if (!user) return res.status(404).json({ error: "User not found" });
     return res
       .status(200)
-      .json({ id: user._id, name: user.name, email: user.email, role: user.role });
+      .json({
+        id: user._id,
+        name: user.name,
+        email: user.email,
+        role: user.role,
+        favorites: user.favorites,
+      });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }

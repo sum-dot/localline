@@ -9,8 +9,20 @@ function Profile() {
   const [editing, setEditing] = useState(false);
   const [nameDraft, setNameDraft] = useState("");
   const [emailDraft, setEmailDraft] = useState("");
-  const navigate = useNavigate();
   const [saveError, setSaveError] = useState("");
+  const [favorites, setFavorites] = useState([]);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (checkingAuth || !isLoggedIn) return;
+
+    fetch("http://localhost:4000/users/me/favorites", {
+      credentials: "include",
+    })
+      .then((res) => res.json())
+      .then((data) => setFavorites(data))
+      .catch(() => setFavorites([]));
+  }, [checkingAuth, isLoggedIn]);
 
   useEffect(() => {
     if (checkingAuth) return;
@@ -52,6 +64,26 @@ function Profile() {
     setEditing(false);
   };
 
+  const handleRemoveFavorite = async (busId) => {
+    try {
+      const res = await fetch(
+        `http://localhost:4000/users/me/favorites/${busId}`,
+        { method: "POST", credentials: "include" },
+      );
+      if (!res.ok) return;
+
+      // The bus is no longer favorited (this same endpoint toggles),
+      // so just drop it from the locally displayed list.
+      setFavorites((prev) => prev.filter((bus) => bus._id !== busId));
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  const handleFavoriteClick = (bus) => {
+    navigate("/", { state: { from: bus.from, to: bus.to } });
+  };
+
   if (checkingAuth || !me)
     return <div className="profile-page">Loading...</div>;
 
@@ -61,6 +93,7 @@ function Profile() {
         ←
       </button>
       <h1 className="profile-title">Profile</h1>
+
       <div className="profile-card">
         <div className="profile-details">
           <span className="label">Username</span>
@@ -112,6 +145,44 @@ function Profile() {
             </>
           )}
         </div>
+      </div>
+
+      <div className="favorites-card">
+        <h2 className="favorites-title">My Favorite Buses</h2>
+
+        {favorites.length === 0 ? (
+          <p className="favorites-empty">
+            No favorites yet — heart a bus on the route finder to save it here.
+          </p>
+        ) : (
+          <ul className="favorites-list">
+            {favorites.map((bus) => (
+              <li key={bus._id} className="favorite-item">
+                <button
+                  className="favorite-item-main"
+                  onClick={() => handleFavoriteClick(bus)}
+                >
+                  <span className="favorite-name">
+                    {bus.nameLocal && bus.nameLocal.trim() !== ""
+                      ? bus.nameLocal
+                      : bus.name}
+                  </span>
+                  <span className="favorite-route">
+                    {bus.from} → {bus.to}
+                  </span>
+                </button>
+                <button
+                  className="favorite-remove"
+                  onClick={() => handleRemoveFavorite(bus._id)}
+                  aria-label="Remove from favorites"
+                  title="Remove from favorites"
+                >
+                  ✕
+                </button>
+              </li>
+            ))}
+          </ul>
+        )}
       </div>
     </div>
   );

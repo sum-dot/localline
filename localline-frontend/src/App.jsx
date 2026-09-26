@@ -1,6 +1,7 @@
 import "./App.css";
 import { Routes, Route, useLocation } from "react-router";
 
+import CarbonFootprintDisplay from "./components/CarbonFootprintDisplay";
 import Header from "./components/Header";
 import SubNav from "./components/SubNav";
 
@@ -36,6 +37,7 @@ function App() {
           <Route path="/admin" element={<AdminDashboard />} />
         </Route>
       </Routes>
+      <CarbonFootprintDisplay />
     </div>
   );
 }

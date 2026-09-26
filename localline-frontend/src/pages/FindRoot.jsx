@@ -1,5 +1,6 @@
 import "../../style4.css";
 import { useState, useEffect } from "react";
+import { useLocation } from "react-router";
 import RouteFinder from "./RouteFinder";
 import { useAuthContext } from "../context/AuthContext";
 
@@ -7,6 +8,7 @@ const MAX_RECENT = 4;
 
 function FindRoot() {
   const { isLoggedIn, user } = useAuthContext();
+  const location = useLocation();
   const [showRouteFinder, setShowRouteFinder] = useState(false);
   const [from, setFrom] = useState("");
   const [to, setTo] = useState("");
@@ -35,6 +37,16 @@ function FindRoot() {
     setRecentSearches(updated);
     localStorage.setItem(`recentSearches_${user.id}`, JSON.stringify(updated));
   };
+
+  // If we arrived here from a favorite click (or anything that passes
+  // from/to in navigation state), prefill and auto-run the search.
+  useEffect(() => {
+    if (location.state?.from && location.state?.to) {
+      setFrom(location.state.from);
+      setTo(location.state.to);
+      setShowRouteFinder(true);
+    }
+  }, [location.state]);
 
   const handleFindBus = () => {
     if (!from || !to) {
