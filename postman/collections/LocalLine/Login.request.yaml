@@ -1,7 +1,0 @@
-$kind: http-request
-url: "{{baseUrl}}/auth/login"
-method: POST
-body:
-  type: json
-  content: '{ "email": "zahian@gmail.com", "password": "12345" }'
-order: 3447244760126997
