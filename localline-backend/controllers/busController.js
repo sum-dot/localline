@@ -52,9 +52,7 @@ export const searchBuses = async (req, res) => {
       return res.status(200).json([]);
     }
 
-    const escaped = query
-      .trim()
-      .replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+    const escaped = query.trim().replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 
     const regex = new RegExp("^" + escaped, "i");
 
@@ -92,14 +90,10 @@ export const createBus = async (req, res) => {
 
 export const updateBus = async (req, res) => {
   try {
-    const updated = await Bus.findByIdAndUpdate(
-      req.params.id,
-      req.body,
-      {
-        new: true,
-        runValidators: true,
-      }
-    );
+    const updated = await Bus.findByIdAndUpdate(req.params.id, req.body, {
+      new: true,
+      runValidators: true,
+    });
 
     if (!updated) {
       return res.status(404).json({ error: "Bus not found" });
@@ -147,7 +141,7 @@ export const rateBus = async (req, res) => {
     }
 
     const existing = bus.ratings.find(
-      (r) => r.user.toString() === userId.toString()
+      (r) => r.user.toString() === userId.toString(),
     );
 
     if (existing) {

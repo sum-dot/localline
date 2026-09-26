@@ -14,7 +14,6 @@ import AdminDashboard from "./pages/AdminDashboard";
 import AdminRoute from "./routes/AdminRoute";
 import PublicRoute from "./routes/PublicRoute";
 
-
 function App() {
   const location = useLocation();
   const noNavPaths = ["/login", "/register", "/profile"];

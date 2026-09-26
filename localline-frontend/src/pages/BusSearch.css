@@ -4,7 +4,7 @@
   max-width: 900px;
   min-height: 300px;
   padding: 1.5rem;
-  border: 1px solid #A4A9B4;
+  border: 1px solid #a4a9b4;
   border-radius: 20px;
   margin: 1.5rem auto;
   box-sizing: border-box;
@@ -42,7 +42,7 @@
   width: 100%;
   padding: 0.65rem 0.9rem;
   margin-top: 0.5rem;
-  border: .75px solid #7d7c7c;
+  border: 0.75px solid #7d7c7c;
   border-radius: 6px;
   font-size: 0.95rem;
   box-sizing: border-box;
@@ -120,7 +120,6 @@
   }
 }
 
-
 .pagination {
   display: flex;
   justify-content: center;
@@ -147,4 +146,3 @@
   background-color: #059033;
   color: white;
 }
-

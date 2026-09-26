@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import "./BusSearch.css";
 import BusSearchResult from "./BusSearchResult";
@@ -19,7 +18,7 @@ function BusSearch() {
       url = `http://localhost:4000/buses/list?page=${page}`;
     } else {
       url = `http://localhost:4000/buses/search?query=${encodeURIComponent(
-        submittedSearch
+        submittedSearch,
       )}&field=name`;
     }
 
@@ -92,10 +91,7 @@ function BusSearch() {
       </div>
 
       {buses.map((bus) => (
-        <BusSearchResult
-          key={bus._id}
-          bus={bus}
-        />
+        <BusSearchResult key={bus._id} bus={bus} />
       ))}
 
       {submittedSearch !== "" && buses.length === 0 && (
@@ -111,18 +107,17 @@ function BusSearch() {
 
       {submittedSearch === "" && totalPages > 1 && (
         <div className="pagination">
-          {Array.from(
-            { length: totalPages },
-            (_, index) => index + 1
-          ).map((pageNumber) => (
-            <button
-              key={pageNumber}
-              className={page === pageNumber ? "active" : ""}
-              onClick={() => setPage(pageNumber)}
-            >
-              {pageNumber}
-            </button>
-          ))}
+          {Array.from({ length: totalPages }, (_, index) => index + 1).map(
+            (pageNumber) => (
+              <button
+                key={pageNumber}
+                className={page === pageNumber ? "active" : ""}
+                onClick={() => setPage(pageNumber)}
+              >
+                {pageNumber}
+              </button>
+            ),
+          )}
         </div>
       )}
     </>
@@ -130,4 +125,3 @@ function BusSearch() {
 }
 
 export default BusSearch;
-
