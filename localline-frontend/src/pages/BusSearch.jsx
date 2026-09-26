@@ -62,12 +62,6 @@ function BusSearch() {
     setSubmittedSearch(search.trim());
   }
 
-  function handleKeyDown(e) {
-    if (e.key === "Enter") {
-      handleSearch();
-    }
-  }
-
   return (
     <>
       <div className="bus-search-box">
@@ -89,7 +83,6 @@ function BusSearch() {
             placeholder="Type bus name - e.g. Hazi Transport"
             value={search}
             onChange={handleSearchChange}
-            onKeyDown={handleKeyDown}
           />
 
           <button className="search-button" onClick={handleSearch}>
