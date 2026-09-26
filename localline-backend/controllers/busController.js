@@ -54,28 +54,48 @@ export const searchBuses = async (req, res) => {
 
     const escaped = query.trim().replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 
-    const regex = new RegExp("^" + escaped, "i");
+    const startsWithRegex = new RegExp("^" + escaped, "i");
+    const containsRegex = new RegExp(escaped, "i");
 
     const filter =
       field === "name"
-        ? { name: regex }
+        ? { name: containsRegex }
         : {
             $or: [
-              { name: regex },
-              { nameLocal: regex },
-              { from: regex },
-              { to: regex },
-              { stops: regex },
+              { name: containsRegex },
+              { nameLocal: containsRegex },
+              { from: containsRegex },
+              { to: containsRegex },
+              { stops: containsRegex },
             ],
           };
 
-    const buses = await Bus.find(filter).limit(5);
+    const buses = await Bus.find(filter);
 
-    res.status(200).json(buses);
+    buses.sort((a, b) => {
+      const aName = a.name || "";
+      const bName = b.name || "";
+
+      const aStarts = startsWithRegex.test(aName);
+      const bStarts = startsWithRegex.test(bName);
+
+      if (aStarts && !bStarts) {
+        return -1;
+      }
+
+      if (!aStarts && bStarts) {
+        return 1;
+      }
+
+      return 0;
+    });
+
+    res.status(200).json(buses.slice(0, 5));
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
 };
+
 export const createBus = async (req, res) => {
   try {
     const bus = new Bus(req.body);
