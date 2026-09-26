@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import "./BusSearch.css";
 import BusSearchResult from "./BusSearchResult";
@@ -58,10 +57,14 @@ function BusSearch() {
     }
   }
 
+  function handleSearch() {
+    setPage(1);
+    setSubmittedSearch(search.trim());
+  }
+
   function handleKeyDown(e) {
     if (e.key === "Enter") {
-      setPage(1);
-      setSubmittedSearch(search.trim());
+      handleSearch();
     }
   }
 
@@ -88,6 +91,13 @@ function BusSearch() {
             onChange={handleSearchChange}
             onKeyDown={handleKeyDown}
           />
+
+          <button
+            className="search-button"
+            onClick={handleSearch}
+          >
+            Search
+          </button>
         </div>
       </div>
 
@@ -130,4 +140,3 @@ function BusSearch() {
 }
 
 export default BusSearch;
-
