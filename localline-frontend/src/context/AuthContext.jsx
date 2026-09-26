@@ -54,12 +54,16 @@ export function AuthProvider({ children }) {
     navigate("/");
   };
 
+  const updateFavorites = (favorites) => {
+    setUser((prev) => (prev ? { ...prev, favorites } : prev));
+  };
+
   const isLoggedIn = !!user;
   const isAdmin = user?.role === "admin";
 
   return (
     <AuthContext.Provider
-      value={{ user, isLoggedIn, isAdmin, checkingAuth, login, logout, refreshUser }}
+      value={{ user, isLoggedIn, isAdmin, checkingAuth, login, logout, refreshUser, updateFavorites }}
     >
       {children}
     </AuthContext.Provider>

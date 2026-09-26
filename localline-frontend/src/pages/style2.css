@@ -126,6 +126,17 @@ body {
   margin-top: 8px;
 }
 
+.route-header {
+  position: relative;
+}
+
+.route-header .favorite-heart {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  font-size: 1.8rem;
+}
+
 .favorite-heart {
   color: #ccc;
   cursor: pointer;

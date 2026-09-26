@@ -18,7 +18,6 @@ function BusCard(props) {
   }
 
   let arrowSymbol = "▼";
-
   if (isThisCardOpen === true) {
     arrowSymbol = "▲";
   }
@@ -28,23 +27,6 @@ function BusCard(props) {
       <div className="bus-card-header" onClick={handleHeaderClick}>
         <img src={busIcon} alt="" className="bus-icon" />
         <h2>{props.name}</h2>
-
-        {props.isLoggedIn && (
-          <span
-            className={
-              props.isFavorited
-                ? "favorite-heart favorite-heart-active"
-                : "favorite-heart"
-            }
-            onClick={(e) => {
-              e.stopPropagation();
-              props.onToggleFavorite();
-            }}
-          >
-            ♥
-          </span>
-        )}
-
         <span className="dropdown-arrow">{arrowSymbol}</span>
       </div>
       <div className="tags">
@@ -60,50 +42,39 @@ function BusCard(props) {
         <div className="steps">
           <div className="step">
             <div className="step-number active">1</div>
-
             <div className="step-content">
               <p className="step-title">
                 Go to <strong>{props.goTo}</strong>
               </p>
-
               <p className="step-desc">
                 Stand on the correct side of the road.
               </p>
             </div>
           </div>
-
           <div className="step">
             <div className="step-number active">2</div>
-
             <div className="step-content">
               <p className="step-title">
                 Board <strong>{props.name}</strong>
               </p>
-
               <p className="step-desc">Ask: "{props.getOffAt} যাবে?"</p>
             </div>
           </div>
-
           <div className="step">
             <div className="step-number blue">3</div>
-
             <div className="step-content">
               <p className="step-title">
                 Ride <strong>{props.stops} stops</strong> (~{props.time})
               </p>
-
               <p className="step-desc">Pay {props.fare} to conductor.</p>
             </div>
           </div>
-
           <div className="step">
             <div className="step-number gray">4</div>
-
             <div className="step-content">
               <p className="step-title">
                 Get off at <strong>{props.getOffAt}</strong>
               </p>
-
               <p className="step-desc">
                 Tell conductor "নামবো" as you approach.
               </p>
@@ -113,7 +84,6 @@ function BusCard(props) {
           {props.isLoggedIn && (
             <div className="rating-row">
               <span className="rating-label">Rate this bus:</span>
-
               <span className="rating-stars">
                 {[1, 2, 3, 4, 5].map((n) => (
                   <span
@@ -129,7 +99,6 @@ function BusCard(props) {
                   </span>
                 ))}
               </span>
-
               {props.ratingCount > 0 && (
                 <span className="rating-average">
                   {props.avgRating.toFixed(1)} ({props.ratingCount})
@@ -144,13 +113,13 @@ function BusCard(props) {
 }
 
 export default function RouteFinder(props) {
-  const { isLoggedIn, user } = useAuthContext();
-  const [favoriteIds, setFavoriteIds] = useState(new Set());
+  const { isLoggedIn, user, updateFavorites } = useAuthContext();
 
   const [openCard, setOpenCard] = useState(null);
   const [allBuses, setAllBuses] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [isRouteFavorited, setIsRouteFavorited] = useState(false);
 
   useEffect(() => {
     async function fetchBuses() {
@@ -172,16 +141,10 @@ export default function RouteFinder(props) {
           const res = await fetch(
             `http://localhost:4000/buses/list?page=${page}`,
           );
-
-          if (!res.ok) {
-            throw new Error("Bad response");
-          }
-
+          if (!res.ok) throw new Error("Bad response");
           const data = await res.json();
-
           collected.push(...(data.results || []));
           total = data.total || 0;
-
           page++;
         } while (collected.length < total);
 
@@ -197,51 +160,38 @@ export default function RouteFinder(props) {
     fetchBuses();
   }, [props.from]);
 
+  // Is the CURRENT route (not any specific bus) already in this user's favorites?
   useEffect(() => {
-    setFavoriteIds(new Set((user?.favorites || []).map((id) => id.toString())));
-  }, [user]);
+    const match = (user?.favorites || []).some(
+      (r) =>
+        r.from?.toLowerCase() === props.from?.toLowerCase() &&
+        r.to?.toLowerCase() === props.to?.toLowerCase(),
+    );
+    setIsRouteFavorited(match);
+  }, [user, props.from, props.to]);
 
   function handleToggle(clickedId) {
-    if (openCard === clickedId) {
-      setOpenCard(null);
-    } else {
-      setOpenCard(clickedId);
-    }
+    setOpenCard(openCard === clickedId ? null : clickedId);
   }
 
   function averageRating(ratings) {
-    if (!ratings || ratings.length === 0) {
-      return 0;
-    }
-
+    if (!ratings || ratings.length === 0) return 0;
     const sum = ratings.reduce((total, r) => total + r.stars, 0);
-
     return sum / ratings.length;
   }
 
   async function handleRate(busId, stars) {
-    if (!isLoggedIn) {
-      return;
-    }
+    if (!isLoggedIn) return;
 
     try {
       const res = await fetch(`http://localhost:4000/buses/${busId}/rate`, {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
         credentials: "include",
-        body: JSON.stringify({
-          stars: stars,
-        }),
+        body: JSON.stringify({ stars: stars }),
       });
-
-      if (!res.ok) {
-        return;
-      }
-
+      if (!res.ok) return;
       const updatedBus = await res.json();
-
       setAllBuses((prev) =>
         prev.map((b) => (b._id === busId ? updatedBus : b)),
       );
@@ -250,18 +200,26 @@ export default function RouteFinder(props) {
     }
   }
 
-  async function handleToggleFavorite(busId) {
+  async function handleToggleRouteFavorite() {
     if (!isLoggedIn) return;
 
     try {
-      const res = await fetch(
-        `http://localhost:4000/users/me/favorites/${busId}`,
-        { method: "POST", credentials: "include" },
-      );
+      const res = await fetch("http://localhost:4000/users/me/favorites", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+        body: JSON.stringify({ from: props.from, to: props.to }),
+      });
       if (!res.ok) return;
 
       const data = await res.json();
-      setFavoriteIds(new Set(data.favorites.map((id) => id.toString())));
+      const match = data.favorites.some(
+        (r) =>
+          r.from.toLowerCase() === props.from.toLowerCase() &&
+          r.to.toLowerCase() === props.to.toLowerCase(),
+      );
+      setIsRouteFavorited(match);
+      updateFavorites(data.favorites);
     } catch (err) {
       console.error(err);
     }
@@ -271,49 +229,32 @@ export default function RouteFinder(props) {
 
   for (const bus of allBuses) {
     const stops = bus.stops || [];
-
     let fromIndex = -1;
     let toIndex = -1;
 
     for (let i = 0; i < stops.length; i++) {
-      if (normalizeName(stops[i]) === normalizeName(props.from)) {
-        fromIndex = i;
-      }
-
-      if (normalizeName(stops[i]) === normalizeName(props.to)) {
-        toIndex = i;
-      }
+      if (normalizeName(stops[i]) === normalizeName(props.from)) fromIndex = i;
+      if (normalizeName(stops[i]) === normalizeName(props.to)) toIndex = i;
     }
 
     if (fromIndex !== -1 && toIndex !== -1 && fromIndex < toIndex) {
       const stopsCount = toIndex - fromIndex;
-
       const ratings = bus.ratings || [];
-
       const own =
         isLoggedIn && user ? ratings.find((r) => r.user === user.id) : null;
 
       matchedBuses.push({
         id: bus._id,
-
         displayName:
           bus.nameLocal && bus.nameLocal.trim() !== ""
             ? bus.nameLocal
             : bus.name,
-
         stopsCount: stopsCount,
-
         fare: stopsCount * FARE_PER_STOP,
-
         minutes: stopsCount * MINUTES_PER_STOP,
-
         avgRating: averageRating(ratings),
-
         ratingCount: ratings.length,
-
         userRating: own ? own.stars : 0,
-
-        isFavorited: favoriteIds.has(bus._id.toString()),
       });
     }
   }
@@ -328,13 +269,9 @@ export default function RouteFinder(props) {
 
   if (matchedBuses.length > 0) {
     let quickest = matchedBuses[0];
-
     for (const bus of matchedBuses) {
-      if (bus.stopsCount < quickest.stopsCount) {
-        quickest = bus;
-      }
+      if (bus.stopsCount < quickest.stopsCount) quickest = bus;
     }
-
     summaryFare = `৳${quickest.fare}`;
     summaryStops = quickest.stopsCount;
     summaryMinutes = quickest.minutes;
@@ -343,29 +280,35 @@ export default function RouteFinder(props) {
   return (
     <div className="page">
       <div className="route-header">
+        {isLoggedIn && (
+          <span
+            className={
+              isRouteFavorited
+                ? "favorite-heart favorite-heart-active"
+                : "favorite-heart"
+            }
+            onClick={handleToggleRouteFavorite}
+          >
+            ♥
+          </span>
+        )}
         <h1>
           {props.from} <span className="arrow">→</span> {props.to}
         </h1>
-
         <span className="badge-light">{matchedBuses.length} direct</span>
       </div>
 
       <div className="stats-bar">
         <div className="stat">
           <div className="stat-value">{summaryFare}</div>
-
           <div className="stat-label">EST. FARE</div>
         </div>
-
         <div className="stat">
           <div className="stat-value">{summaryStops}</div>
-
           <div className="stat-label">STOPS</div>
         </div>
-
         <div className="stat">
           <div className="stat-value">{summaryMinutes}</div>
-
           <div className="stat-label">EST. MIN</div>
         </div>
       </div>
@@ -375,9 +318,7 @@ export default function RouteFinder(props) {
       </button>
 
       {loading && <p className="status-message">Loading buses...</p>}
-
       {error && <p className="status-message">{error}</p>}
-
       {!loading && !error && matchedBuses.length === 0 && (
         <div className="no-results">
           <p>No direct bus found for this route.</p>
@@ -401,8 +342,6 @@ export default function RouteFinder(props) {
           ratingCount={bus.ratingCount}
           userRating={bus.userRating}
           onRate={(stars) => handleRate(bus.id, stars)}
-          isFavorited={bus.isFavorited}
-          onToggleFavorite={() => handleToggleFavorite(bus.id)}
         />
       ))}
 

@@ -4,7 +4,7 @@ import { useNavigate } from "react-router";
 import { useAuthContext } from "../context/AuthContext";
 
 function Profile() {
-  const { isLoggedIn, checkingAuth, logout } = useAuthContext();
+  const { isLoggedIn, checkingAuth, logout, updateFavorites } = useAuthContext();
   const [me, setMe] = useState(null);
   const [editing, setEditing] = useState(false);
   const [nameDraft, setNameDraft] = useState("");
@@ -64,24 +64,27 @@ function Profile() {
     setEditing(false);
   };
 
-  const handleRemoveFavorite = async (busId) => {
+  const handleRemoveFavorite = async (route) => {
     try {
-      const res = await fetch(
-        `http://localhost:4000/users/me/favorites/${busId}`,
-        { method: "POST", credentials: "include" },
-      );
+      const res = await fetch("http://localhost:4000/users/me/favorites", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+        body: JSON.stringify({ from: route.from, to: route.to }),
+      });
       if (!res.ok) return;
 
-      // The bus is no longer favorited (this same endpoint toggles),
-      // so just drop it from the locally displayed list.
-      setFavorites((prev) => prev.filter((bus) => bus._id !== busId));
+      const data = await res.json();
+
+      setFavorites((prev) => prev.filter((r) => r._id !== route._id));
+      updateFavorites(data.favorites);
     } catch (err) {
       console.error(err);
     }
   };
 
-  const handleFavoriteClick = (bus) => {
-    navigate("/", { state: { from: bus.from, to: bus.to } });
+  const handleFavoriteClick = (route) => {
+    navigate("/", { state: { from: route.from, to: route.to } });
   };
 
   if (checkingAuth || !me)
@@ -148,32 +151,28 @@ function Profile() {
       </div>
 
       <div className="favorites-card">
-        <h2 className="favorites-title">My Favorite Buses</h2>
+        <h2 className="favorites-title">My Favorite Routes</h2>
 
         {favorites.length === 0 ? (
           <p className="favorites-empty">
-            No favorites yet — heart a bus on the route finder to save it here.
+            No favorite routes yet — heart a route on the route finder to save
+            it here.
           </p>
         ) : (
           <ul className="favorites-list">
-            {favorites.map((bus) => (
-              <li key={bus._id} className="favorite-item">
+            {favorites.map((route) => (
+              <li key={route._id} className="favorite-item">
                 <button
                   className="favorite-item-main"
-                  onClick={() => handleFavoriteClick(bus)}
+                  onClick={() => handleFavoriteClick(route)}
                 >
-                  <span className="favorite-name">
-                    {bus.nameLocal && bus.nameLocal.trim() !== ""
-                      ? bus.nameLocal
-                      : bus.name}
-                  </span>
                   <span className="favorite-route">
-                    {bus.from} → {bus.to}
+                    {route.from} → {route.to}
                   </span>
                 </button>
                 <button
                   className="favorite-remove"
-                  onClick={() => handleRemoveFavorite(bus._id)}
+                  onClick={() => handleRemoveFavorite(route)}
                   aria-label="Remove from favorites"
                   title="Remove from favorites"
                 >
@@ -187,4 +186,5 @@ function Profile() {
     </div>
   );
 }
+
 export default Profile;

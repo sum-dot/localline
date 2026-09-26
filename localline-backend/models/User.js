@@ -25,8 +25,8 @@ const userSchema = new mongoose.Schema({
 
   favorites: [
     {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Bus",
+      from: { type: String, required: true },
+      to: { type: String, required: true },
     },
   ],
 });

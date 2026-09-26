@@ -41,15 +41,28 @@ export const updateUser = async (req, res) => {
 export const toggleFavorite = async (req, res) => {
   try {
     const userId = req.user.id;
-    const { busId } = req.params;
+    const { from, to } = req.body;
+
+    if (!from || !to) {
+      return res.status(400).json({ error: "from and to are required" });
+    }
 
     const user = await User.findById(userId);
     if (!user) return res.status(404).json({ error: "User not found" });
 
-    const index = user.favorites.findIndex((id) => id.toString() === busId);
+    // Drop any malformed entries left over from before favorites
+    // stored routes instead of bus references, so they never block
+    // future saves.
+    user.favorites = user.favorites.filter((r) => r.from && r.to);
+
+    const index = user.favorites.findIndex(
+      (r) =>
+        r.from.toLowerCase() === from.toLowerCase() &&
+        r.to.toLowerCase() === to.toLowerCase(),
+    );
 
     if (index === -1) {
-      user.favorites.push(busId);
+      user.favorites.push({ from, to });
     } else {
       user.favorites.splice(index, 1);
     }
@@ -63,9 +76,13 @@ export const toggleFavorite = async (req, res) => {
 
 export const getFavorites = async (req, res) => {
   try {
-    const user = await User.findById(req.user.id).populate("favorites");
+    const user = await User.findById(req.user.id);
     if (!user) return res.status(404).json({ error: "User not found" });
-    res.status(200).json(user.favorites);
+
+    // Same defensive filter for display, so old broken entries
+    // never render as blank rows either.
+    const validFavorites = user.favorites.filter((r) => r.from && r.to);
+    res.status(200).json(validFavorites);
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
